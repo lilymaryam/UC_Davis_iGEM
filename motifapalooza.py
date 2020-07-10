@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import random
 
@@ -7,13 +8,6 @@ parser = argparse.ArgumentParser(
 # required arguments
 parser.add_argument('--jasparfile', required=True, type=str,
 	metavar='<str>', help='jaspar file')
-#parser.add_argument('--rint', required=True, type=int,
-#	metavar='<int>', help='required integer argument')
-#parser.add_argument('--rfloat', required=True, type=float,
-#	metavar='<float>', help='required floating point argument')
-# optional arguments with default parameters
-#parser.add_argument('--dstr', required=False, type=str, default='hello',
-#	metavar='<str>', help='optional string argument [%(default)s]')
 parser.add_argument('--numseq', required=False, type=int, default=10,
 	metavar='<int>', help='number of sequences to generate [%(default)i]')
 parser.add_argument('--seqlen', required=False, type=int, default=100,
@@ -44,8 +38,6 @@ def read_JASPAR(jasparfile):
 		for line in jf.readlines():
 			if line.startswith('>'): continue
 			line = line.split()	
-			# need to accomodate different types of jaspar files (?)
-			# need to make a dictionary for each position of the motif
 			for i in range(2,len(line)-1):
 				if len(motif) < (len(line)-3): motif.append({})
 				motif[i-2][nt[linenum]] = int(line[i])
@@ -83,9 +75,6 @@ def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 		else:                  seq += 't'
 	return seq
 		
-#print(generate_seq(arg.numseq, arg.seqlen, arg.PA, arg.PC, arg.PG, arg.PT))
-#print(read_JASPAR(arg.jasparfile))
-#print(generate_site(arg.jasparfile))
 		
 motif = read_JASPAR(arg.jasparfile)
 for i in range(0, arg.numseq):
@@ -95,7 +84,8 @@ for i in range(0, arg.numseq):
 	if r < arg.freq:
 		for j in range(0,arg.mps):
 			site = generate_site(motif)
-			place = random.randint(0, len(seq)-len(motif)+1)
+			assert(len(motif)== len(site))
+			place = random.randint(0, len(seq)-len(motif))
 			places.append(f'{place}+')
 			for k in range(0,len(site)):
 				seq[place+k] = site[k]
