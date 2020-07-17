@@ -36,7 +36,7 @@ with gzip.open(sys.argv[1], 'rt') as fp:
 
 seq = ''.join(seqs)
 for name in gene:
-	beg, end, stand = gene[name]
+	beg, end, strand = gene[name]
 	print(name, beg, end, strand)
 	# now extract the promoter and make fasta file
 
