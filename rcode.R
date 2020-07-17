@@ -1,0 +1,21 @@
+library(tidyverse)
+meme <- read.txt("output.txt")
+glimpse(meme)
+is.na(meme$position)
+#class(meme) 
+#head(meme)
+#ncol(meme)
+#colnames(meme)      
+num = nrow(meme)
+
+print(class(meme$position))
+#as.numeric(meme$position)
+print(class(meme$position))
+for (x in 1:num) 
+{
+  print(x)
+  print(meme[x, 7])
+  print(class(meme[x,7]))
+  print(meme[x,10])
+  print(class(meme[x,10]))
+}
