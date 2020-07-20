@@ -3,13 +3,22 @@
 import sys
 import gzip
 import re
+import argparse
+
+parser = argparse.ArgumentParser(
+	description='Extracts promoters from GenBank file.')
+parser.add_argument('--genbank', required=True, type=str,
+	metavar='<str>', help='genbank file')
+parser.add_argument('--upstream', required=False, type=int, default=500,
+	metavar='<int>', help='optional integer argument [%(default)i]')
+arg = parser.parse_args()
 
 gene = {}
 beg = None
 end = None
 strand = None
 seqs = []
-with gzip.open(sys.argv[1], 'rt') as fp:
+with gzip.open(arg.genbank, 'rt') as fp:
 	while True:
 		line = fp.readline()
 		if line.startswith('ORIGIN'): break
@@ -25,7 +34,7 @@ with gzip.open(sys.argv[1], 'rt') as fp:
 			if m:
 				name = m.groups()[0]
 				if name not in gene:
-					gene[name] = (beg, end, strand)
+					gene[name] = (int(beg), int(end), strand)
 	
 	while True:
 		line = fp.readline()
@@ -37,6 +46,17 @@ with gzip.open(sys.argv[1], 'rt') as fp:
 seq = ''.join(seqs)
 for name in gene:
 	beg, end, strand = gene[name]
-	print(name, beg, end, strand)
-	# now extract the promoter and make fasta file
+	
+	c1, c2 = None, None
+	if strand == '+':
+		c1 = beg - arg.upstream
+		if c1 < 0: c1 = 0
+		c2 = beg
+	else:
+		c1 = end
+		c2 = end + arg.upstream
+		if c2 > len(seq): c2 = len(seq)
+	
+	print(f'>{name} {arg.upstream} {strand}')
+	print(f'{seq[c1:c2]}')
 
