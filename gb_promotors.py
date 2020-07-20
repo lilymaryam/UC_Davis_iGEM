@@ -67,8 +67,3 @@ for name in gene:
 	
 	print(f'>{name} {arg.upstream} {strand}')
 	print(f'{seq[c1:c2]}')
-	
-	# need to omit sequences that are too short
-	
-	
-
