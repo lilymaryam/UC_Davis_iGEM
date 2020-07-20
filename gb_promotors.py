@@ -23,14 +23,20 @@ with gzip.open(arg.genbank, 'rt') as fp:
 		line = fp.readline()
 		if line.startswith('ORIGIN'): break
 		if line.startswith('     gene'):
-			m1 = re.search('(\d+)\.\.(\d+)', line)
+			m1 = re.search('<?(\d+)\.\.>?(\d+)', line)
 			if m1:
 				beg, end = m1.groups()
 				m2 = re.search('complement', line)
 				if m2: strand = '+'
 				else:  strand = '-'
 		if line.startswith('                     /gene'):
-			m = re.search('gene="(\S+)"', line)
+			m = re.search('/gene="(\S+)"', line)
+			if m:
+				name = m.groups()[0]
+				if name not in gene:
+					gene[name] = (int(beg), int(end), strand)
+		if line.startswith('                     /locus_tag'):
+			m = re.search('/locus_tag="(\S+)"', line)
 			if m:
 				name = m.groups()[0]
 				if name not in gene:
@@ -57,6 +63,12 @@ for name in gene:
 		c2 = end + arg.upstream
 		if c2 > len(seq): c2 = len(seq)
 	
+	if c2 - c1 < arg.upstream: continue
+	
 	print(f'>{name} {arg.upstream} {strand}')
 	print(f'{seq[c1:c2]}')
+	
+	# need to omit sequences that are too short
+	
+	
 
