@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--genbank', required=True, type=str,
 	metavar='<str>', help='genbank file')
 parser.add_argument('--upstream', required=False, type=int, default=500,
-	metavar='<int>', help='optional integer argument [%(default)i]')
+	metavar='<int>', help='length of promoter region [%(default)i]')
 arg = parser.parse_args()
 
 gene = {}
