@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-
+"""
+(Correct if incorrect)
+This program can either take the output of motifapalooza.py or any FASTA file you want,
+though we'd mostly be using this on groups of promoter regions where we want to find
+the TF binding site. You can customize this with different parameters, described in the
+argparse section (lines ~20-38). Things this program outputs: the motif that MEME founds, the p-value
+of those motifs (i.e. how likely that these motifs arose by chance), and . . . other stuff?
+Either this or an additional program will analyze the MEME-generated motifs and quantify
+how "good" MEME was at finding the right motif, i.e. the motif that we either put in there
+(in the case of the motifapalooza outputs) or that we know to be there (in the case of the
+clusters with known TF binding sites inside).
+"""
 import argparse
 import re
 import os
