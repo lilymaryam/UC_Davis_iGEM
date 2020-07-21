@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""
+(Correct if incorrect)
+This program takes a known TF binding site in the form of a position weight matrix from JASPAR
+and inputs that short sequence into a string of random DNA that the program generates. This is one of the "positive
+control" things that we're doing to test how effective MEME is at finding the right binding site.
+This is different from the other "positive control" thing we're doing to test MEME, in which we
+take known TF binding sites from a specific cluster found in literature and run MEME on that.
+"""
 import argparse
 import random
 
