@@ -60,11 +60,3 @@ for i in range(0, arg.numseq):
 				seq[place+k] = site[k]
 	print(f'>seq-{i} {places}')
 	print(''.join(seq))
-
-	
-		
-		
-		
-	
-
-
