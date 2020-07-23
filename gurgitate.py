@@ -18,4 +18,5 @@ for i in range(arg.seqs):
 	print(site)
 
 # if you collected the sites back into a motif, would it look like the motif?
+# how would you measure the similarity?
 # you might want to run this many times to look at the variance
