@@ -129,6 +129,7 @@ def globalcompare(motif1,motif2): #how should input background info?
 		print(minmotif)
 		for l in range(len(minmotif)):
 			for nt in minmotif[l]:
+				#manhattan similarity: allows for highest score
 				d += 1-abs(minmotif[l][nt]-max[l][nt])
 		print(d)
 		distances.append(d)
@@ -143,12 +144,40 @@ def globalcompare(motif1,motif2): #how should input background info?
 			if distances[i] >= bestfit:
 				bestfit = distances[i]
 				fitindex = i
-		print(fitindex, bestfit)
+		return fitindex, bestfit
 		
-				#print(minmotif)
-			#	print(minmotif[l])
-			
-	#for i in range(0, len(min)):
+def localcompare(motif1, motif2):
+	distances = []
+	if len(motif1) > len(motif2):
+		max = motif1
+		min = motif2
+	elif length(motif2) > len(motif1):
+		max = motif2
+		min = motif1
+	for i in range(0,len(max)-len(min)):
+		d = 0
+		window = max[i:i+len(min)]
+		for j in range(len(window)):
+			for nt in window[j]:
+				d += 1 - abs(window[j][nt]-min[j][nt])
+		distances.append(d)
+			#d += 1
+	print(distances)
+	bestfit = 0
+	fitindex = 0
+	for i in range(len(distances)):
+		if i == 0: 
+			bestfit = distances[i]
+			fitindex = i
+		else: 
+			if distances[i] > bestfit:
+				bestfit = distances[i]
+				fitindex = i
+	print(len(dista)
+
+
+
+		
 		
 
 
@@ -165,7 +194,7 @@ def globalcompare(motif1,motif2): #how should input background info?
 motif1 = read_JASPAR('Jaspar/MA0265.1.jaspar')
 motif2 = read_JASPAR('Jaspar/MA0266.1.jaspar')
 #print(motifcompare(motif1,motif2))
-print(globalcompare(motif1,motif2))
+print(localcompare(motif1,motif2))
 
 	
 	
