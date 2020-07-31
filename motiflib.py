@@ -60,8 +60,10 @@ def positionalaccuracy(mpos,jpos,mw,jw):
 	posdis = 0
 	if jpos == '' and mpos != 'NA':
 		fp += 1
+		posdis = 100
 	elif jpos != '' and mpos == 'NA':
 		fn += 1
+		posdis = 99
 	elif jpos != '' and mpos!= 'NA':
 		mpos = int(mpos)
 		jpos = int(jpos)
@@ -73,6 +75,7 @@ def positionalaccuracy(mpos,jpos,mw,jw):
 			posdis = mpos-jpos
 		else:
 			fl += 1	
+			posdis = 98
 	return mpos,jpos, fn, fp, posdis, fl
 	
 #uses manhattan distance (edit distance) to compare two pwms		
@@ -126,12 +129,11 @@ def globalcompare(motif1,motif2): #how should input background info?
 			#print(minmotif)
 		for k in range(0,len(min)):
 			minmotif[i+k] = min[k]
-		print(minmotif)
+		#print(minmotif)
 		for l in range(len(minmotif)):
 			for nt in minmotif[l]:
 				#manhattan similarity: allows for highest score
 				d += 1-abs(minmotif[l][nt]-max[l][nt])
-		print(d)
 		distances.append(d)
 	#print(distances)
 	bestfit = 0
@@ -144,7 +146,7 @@ def globalcompare(motif1,motif2): #how should input background info?
 			if distances[i] >= bestfit:
 				bestfit = distances[i]
 				fitindex = i
-		return fitindex, bestfit
+		return bestfit
 		
 def localcompare(motif1, motif2):
 	distances = []
@@ -161,8 +163,6 @@ def localcompare(motif1, motif2):
 			for nt in window[j]:
 				d += 1 - abs(window[j][nt]-min[j][nt])
 		distances.append(d)
-			#d += 1
-	print(distances)
 	bestfit = 0
 	fitindex = 0
 	for i in range(len(distances)):
@@ -173,7 +173,7 @@ def localcompare(motif1, motif2):
 			if distances[i] > bestfit:
 				bestfit = distances[i]
 				fitindex = i
-	print(len(dista)
+	return bestfit
 
 
 
@@ -190,11 +190,11 @@ def localcompare(motif1, motif2):
 		
 			
 			
-		
+#test code	
 motif1 = read_JASPAR('Jaspar/MA0265.1.jaspar')
 motif2 = read_JASPAR('Jaspar/MA0266.1.jaspar')
 #print(motifcompare(motif1,motif2))
-print(localcompare(motif1,motif2))
+print(globalcompare(motif1,motif2))
 
 	
 	
