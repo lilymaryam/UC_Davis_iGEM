@@ -33,7 +33,7 @@ def generate_site(motif):
 		else:                    motifseq += 'T'
 	return motifseq
 	
-def calcmotif(sites):
+def new_pwm(sites):
 	newmot =[]
 	for i in range(len(sites[0])):
 		A = 0
@@ -53,7 +53,7 @@ def calcmotif(sites):
 		newmot[i]['T'] = T/len(sites)
 	return newmot
 	
-def positionalaccuracy(mpos,jpos,mw,jw):
+def pos_accuracy(mpos,jpos,mw,jw):
 	fn = 0
 	fp = 0
 	fl = 0
@@ -79,7 +79,7 @@ def positionalaccuracy(mpos,jpos,mw,jw):
 	return mpos,jpos, fn, fp, posdis, fl
 	
 #uses manhattan distance (edit distance) to compare two pwms		
-def motifcompare(motif1, motif2):
+def compare_motifs(motif1, motif2):
 	if len(motif1) == len(motif2):
 		d = 0
 		for i in range(len(motif1)):
@@ -112,7 +112,7 @@ def motifcompare(motif1, motif2):
 				winpos = w
 	return d
 
-def globalcompare(motif1,motif2): #how should input background info?
+def global_motcompare(motif1,motif2): #how should input background info?
 	background = {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25}
 	distances = []
 	if len(motif1) > len(motif2):
@@ -148,7 +148,7 @@ def globalcompare(motif1,motif2): #how should input background info?
 				fitindex = i
 		return bestfit
 		
-def localcompare(motif1, motif2):
+def local_motcompare(motif1, motif2):
 	distances = []
 	if len(motif1) > len(motif2):
 		max = motif1
