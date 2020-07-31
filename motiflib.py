@@ -191,10 +191,10 @@ def local_motcompare(motif1, motif2):
 			
 			
 #test code	
-motif1 = read_JASPAR('Jaspar/MA0265.1.jaspar')
-motif2 = read_JASPAR('Jaspar/MA0266.1.jaspar')
+#motif1 = read_JASPAR('Jaspar/MA0265.1.jaspar')
+#motif2 = read_JASPAR('Jaspar/MA0266.1.jaspar')
 #print(motifcompare(motif1,motif2))
-print(globalcompare(motif1,motif2))
+#print(globalcompare(motif1,motif2))
 
 	
 	
