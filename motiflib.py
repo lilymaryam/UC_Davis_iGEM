@@ -153,7 +153,7 @@ def local_motcompare(motif1, motif2):
 	if len(motif1) > len(motif2):
 		max = motif1
 		min = motif2
-	elif length(motif2) > len(motif1):
+	elif len(motif2) > len(motif1):
 		max = motif2
 		min = motif1
 	for i in range(0,len(max)-len(min)):
@@ -175,14 +175,33 @@ def local_motcompare(motif1, motif2):
 				fitindex = i
 	return bestfit
 
+if __name__ == '__main__':
 
+	m1 = [{'A':1, 'C':0, 'G':0, 'T':0}]
+	m2 = [{'A':1, 'C':0, 'G':0, 'T':0}]
+	m3 = [
+		{'A':1, 'C':0, 'G':0, 'T':0},
+		{'A':0, 'C':1, 'G':0, 'T':0}
+	]
+	
+	
+	assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
+	assert(local_motcompare(m1, m2) == 0) # minimum value
+	
+	"""
+	dl12 = local_motcompare(m1, m2)
+	dl21 = local_motcompare(m2, m1)
+	dl22 = local_motcompare(m2, m2)
+	print(dl11, dl12, dl21, dl22)
 
-		
-		
+	dg11 = global_motcompare(m1, m1)
+	dg12 = global_motcompare(m1, m2)
+	dg21 = global_motcompare(m2, m1)
+	dg22 = global_motcompare(m2, m2)
+	print(dg11, dg12, dg21, dg22)
+	"""
 
-
-
-		
+	
 		
 		
 		
