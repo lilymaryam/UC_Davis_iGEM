@@ -41,7 +41,9 @@ model = ['zoops']#, #'oops', 'anr']
 markovorder = ['0', '1']
 
 print('jasparfile','sequence', 'motifs found', 'markov','motif','strand','meme position',\
-'meme width', 'e value', 'jaspar position', 'jaspar width','motif distance','false negative','false positive','positional distance','fail', sep=', ')
+'meme width', 'e value', 'jaspar position', 'jaspar width','motif distance score',\
+'motif score percentage','false negative','false positive','positional distance','fail',\
+sep=', ')
 for f in filenum:
 	filepath = f'{arg.jaspardirectory}/MA{f}.1.jaspar'
 	for p in promoter:
@@ -52,44 +54,47 @@ for f in filenum:
 			os.system(cmd)
 			for m in model:
 				for o in markovorder:
-						os.system(f'{arg.memepath} testmotif{f}.fa -dna -markov_order {o} -mod {m}')
+						os.system(f'{arg.memepath} testmotif{f}.fa -dna -markov_order {o}\
+						 -mod {m}')
 						memestats = readmeme.readmemeout('meme_out/meme.xml')
 						#data parsing
-						jpositions = []
-						with open(f'testmotif{f}.fa') as tm:
-							for line in tm.readlines():
-								if line.startswith('>'): 
-									line = line.split()
-									#print(line)
-									jposi = line[1].strip('[]')
-									jposi = jposi.strip("''")
-									jposi = jposi.strip('+')
-									jpositions.append(jposi)
+						jpositions = readmeme.read_testmotif(f'testmotif{f}.fa')
 						jasparpwm = motiflib.read_JASPAR(filepath)
 						memepwm = readmeme.memepwm('meme_out/meme.txt')
-						pwmdistance = motiflib.globalcompare(jasparpwm, memepwm)
+						pwmdistance = motiflib.global_motcompare(jasparpwm, memepwm,\
+						{'A':.25,'C':.25,'G':.25,'T':.25})
 						for i in range(0,len(memestats)):
 							memestat = memestats[i]
 							jpos = jpositions[i]
 							mpos = memestat[4]
-							positioninfo = motiflib.positionalaccuracy(mpos, jpos, len(memepwm), len(jasparpwm))	
+							positioninfo = motiflib.pos_accuracy(mpos, jpos, \
+							len(memepwm), len(jasparpwm))	
 						#data display !! always at the very end 	
 							if memestat[1] == 0:
 								if len(jpositions[i]) > 0:
-									print(f, memestat[0], memestat[1], o, '', '', '', '', '',\
-									jpositions[i],len(jasparpwm),pwmdistance, positioninfo[2],positioninfo[3],positioninfo[4],positioninfo[5], sep =', ')
+									print(f, memestat[0], memestat[1], o, '', '', '',\
+									 '', '', jpositions[i],len(jasparpwm),pwmdistance[0],\
+									pwmdistance[1],positioninfo[2],positioninfo[3],\
+									positioninfo[4], positioninfo[5], sep =', ')
 								else:
-									print(f, memestat[0], memestat[1], o, '', '', '', '', '',\
-									jpositions[i],'',pwmdistance,positioninfo[2],positioninfo[3],positioninfo[4],positioninfo[5], sep =', ')
+									print(f, memestat[0], memestat[1], o, '', '', '', \
+									'', '', jpositions[i],'',pwmdistance[0], \
+									pwmdistance[1], positioninfo[2],positioninfo[3],\
+									positioninfo[4],positioninfo[5], sep =', ')
 							else:
 								if len(jpositions[i]) > 0: 
 									print(f, memestat[0], memestat[1], o, memestat[2],\
 									memestat[3], memestat[4], memestat[6], memestat[8],\
-									jpositions[i], len(jasparpwm),pwmdistance,positioninfo[2],positioninfo[3],positioninfo[4],positioninfo[5], sep=', ' )
+									jpositions[i], len(jasparpwm),pwmdistance[0],\
+									pwmdistance[1], positioninfo[2],positioninfo[3],\
+									positioninfo[4],positioninfo[5], sep=', ' )
 								else: 
 									print(f, memestat[0], memestat[1], o, memestat[2],\
 									memestat[3], memestat[4], memestat[6], memestat[8],\
-									jpositions[i], '',pwmdistance, positioninfo[2],positioninfo[3],positioninfo[4],positioninfo[5], sep=', ' )
+									jpositions[i], '',pwmdistance[0], pwmdistance[1], \
+									positioninfo[2], positioninfo[3],positioninfo[4],\
+									positioninfo[5], sep=', ' )
+							
 
 						
 						
