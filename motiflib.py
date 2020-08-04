@@ -60,9 +60,11 @@ def pos_accuracy(mpos,jpos,mw,jw):
 	posdis = 0
 	if jpos == '' and mpos != 'NA':
 		fp += 1
+		fl += 1
 		posdis = 100
 	elif jpos != '' and mpos == 'NA':
 		fn += 1
+		fl += 1
 		posdis = 99
 	elif jpos != '' and mpos!= 'NA':
 		mpos = int(mpos)
@@ -78,7 +80,9 @@ def pos_accuracy(mpos,jpos,mw,jw):
 			posdis = 98
 	return mpos,jpos, fn, fp, posdis, fl
 	
-#uses manhattan distance (edit distance) to compare two pwms		
+#uses manhattan distance (edit distance) to compare two pwms
+#delete this function?
+		
 def compare_motifs(motif1, motif2):
 	if len(motif1) == len(motif2):
 		d = 0
@@ -112,30 +116,44 @@ def compare_motifs(motif1, motif2):
 				winpos = w
 	return d
 
-def global_motcompare(motif1,motif2): #how should input background info?
-	background = {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25}
+def global_motcompare(motif1,motif2,background): #background info needs to be a dictionary
 	distances = []
-	if len(motif1) > len(motif2):
-		max = motif1
-		min = motif2
-	elif len(motif2) > len(motif1):
-		max = motif2
-		min = motif1
-	for i in range(0,len(max)-len(min)+1):
-		minmotif = []
-		d = 0
-		for j in range(0,len(max)):
-			minmotif.append(background)
-			#print(minmotif)
-		for k in range(0,len(min)):
-			minmotif[i+k] = min[k]
-		#print(minmotif)
-		for l in range(len(minmotif)):
-			for nt in minmotif[l]:
-				#manhattan similarity: allows for highest score
-				d += 1-abs(minmotif[l][nt]-max[l][nt])
-		distances.append(d)
-	#print(distances)
+	score = 0 ### fix placement?
+	#is this the best way?
+	if len(motif1)==0 or len(motif2)== 0:
+		score = 0
+		distances.append(score)
+		max_score = 1
+	elif len(motif1) == len(motif2):
+		max_score = 2*len(motif1)
+		for i in range(0, len(motif1)):
+			d = 0
+			for nt in motif1[i]:
+				d += abs(motif1[i][nt] - motif2[i][nt])
+			score += 2-d
+		distances.append(score)		
+	else:
+		if len(motif1) > len(motif2):
+			big = motif1
+			short = motif2
+		elif len(motif2) > len(motif1):
+			big = motif2
+			short = motif1
+		max_score = 2*len(big)
+		for i in range(0,len(big)-len(short)+1):
+			minmotif = []
+			for j in range(0,len(big)):
+				minmotif.append(background)
+			for k in range(0,len(short)):
+				minmotif[i+k] = short[k]
+			score = 0
+			for l in range(len(minmotif)):
+				d = 0
+				for nt in minmotif[l]:
+					#manhattan similarity: allows for highest score
+					d += abs(minmotif[l][nt]-big[l][nt])
+				score += 2-d
+			distances.append(score)
 	bestfit = 0
 	fitindex = 0
 	for i in range(0,len(distances)):
@@ -146,23 +164,40 @@ def global_motcompare(motif1,motif2): #how should input background info?
 			if distances[i] >= bestfit:
 				bestfit = distances[i]
 				fitindex = i
-		return bestfit
+	return bestfit, bestfit/max_score
 		
 def local_motcompare(motif1, motif2):
 	distances = []
-	if len(motif1) > len(motif2):
-		max = motif1
-		min = motif2
-	elif len(motif2) > len(motif1):
-		max = motif2
-		min = motif1
-	for i in range(0,len(max)-len(min)):
-		d = 0
-		window = max[i:i+len(min)]
-		for j in range(len(window)):
-			for nt in window[j]:
-				d += 1 - abs(window[j][nt]-min[j][nt])
-		distances.append(d)
+	if len(motif1) == 0 or len(motif2)==0:
+		score = 0
+		distances.append(score)
+		max_score = 1
+	elif len(motif1) == len(motif2):
+		max_score = 2*len(motif1)
+		score = 0
+		for i in range(len(motif1)):
+			d = 0
+			for nt in motif1[i]:
+				d += abs(motif1[i][nt]-motif2[i][nt])
+			score += 2-d
+		distances.append(score)
+	else:
+		if len(motif1) > len(motif2):
+			big = motif1
+			short = motif2
+		elif len(motif2) > len(motif1):
+			big = motif2
+			short = motif1
+		max_score = 2*len(big)
+		for i in range(0,len(big)-len(short)+1):
+			score = 0
+			window = big[i:i+len(short)]
+			for j in range(len(window)):
+				d = 0
+				for nt in window[j]:
+					d += abs(window[j][nt]-short[j][nt])
+				score += 2-d
+			distances.append(score)
 	bestfit = 0
 	fitindex = 0
 	for i in range(len(distances)):
@@ -173,35 +208,52 @@ def local_motcompare(motif1, motif2):
 			if distances[i] > bestfit:
 				bestfit = distances[i]
 				fitindex = i
-	return bestfit
+	return bestfit, bestfit/max_score
 
 if __name__ == '__main__':
 
-	m1 = [{'A':1, 'C':0, 'G':0, 'T':0}]
-	m2 = [{'A':1, 'C':0, 'G':0, 'T':0}]
+	'''
+	m1 = []
+	m2 = [
+		{'A':0, 'C':0, 'G':0, 'T':1},
+		{'A':.22, 'C':.28, 'G':0, 'T':.5}
+		]
 	m3 = [
+		{'A':.25, 'C':.25, 'G':.5, 'T':0},
 		{'A':1, 'C':0, 'G':0, 'T':0},
-		{'A':0, 'C':1, 'G':0, 'T':0}
-	]
+		{'A':0, 'C':1, 'G':0, 'T':0},
+		
+		]
 	
 	
-	assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
-	assert(local_motcompare(m1, m2) == 0) # minimum value
-	
-	"""
+	#assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
+	#assert(local_motcompare(m1, m2) == 0) # minimum valu
+	dl11 = local_motcompare(m2, m2)
+	dl12 = local_motcompare(m1, m1)
+	dl21 = local_motcompare(m2, m3)
+	dl22 = local_motcompare(m3, m3)
+	print(dl11, dl12, dl21, dl22)
+
+	dg11 = global_motcompare(m1, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg12 = global_motcompare(m1, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg21 = global_motcompare(m2, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg22 = global_motcompare(m2, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg33 = global_motcompare(m3, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	print(dg11)
+	print(dg12)
+	print(dg21)
+	print(dg22)
+	print(dg33)
+	dl11 = compare_motifs(m1, m1)
 	dl12 = local_motcompare(m1, m2)
 	dl21 = local_motcompare(m2, m1)
 	dl22 = local_motcompare(m2, m2)
 	print(dl11, dl12, dl21, dl22)
-
-	dg11 = global_motcompare(m1, m1)
-	dg12 = global_motcompare(m1, m2)
-	dg21 = global_motcompare(m2, m1)
-	dg22 = global_motcompare(m2, m2)
-	print(dg11, dg12, dg21, dg22)
-	"""
-
+	'''
 	
+
+	test1 = pos_accuracy(16,16,16,20)
+	print(test1)
 		
 		
 		
