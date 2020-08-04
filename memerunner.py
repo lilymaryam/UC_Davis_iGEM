@@ -3,8 +3,7 @@
 more_help = """
 %(prog)s takes the output of motifapalooza.py and feeds it into MEME. Recall:
  the output of motifapalooza is multiple sequences with at least one motif 
- embedded. You can customize memerunner with different parameters, described in
- the argparse section (lines ~20-38). Things this program outputs: the motif 
+ embedded. Things this program outputs: the motif 
  that MEME founds, the p-value of those motifs (i.e. how likely it is that these
  motifs arose by chance), and . . . other stuff? Either this or an additional 
  program will analyze the MEME-generated motifs and quantify how "good" MEME was
