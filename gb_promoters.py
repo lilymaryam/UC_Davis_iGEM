@@ -14,8 +14,8 @@ parser.add_argument('--upstream', required=False, type=int, default=500,
 arg = parser.parse_args()
 
 gene = {}
-beg = None
-end = None
+beg = 0
+end = 0
 strand = None
 seqs = []
 with gzip.open(arg.genbank, 'rt') as fp:
