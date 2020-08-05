@@ -1,16 +1,13 @@
-#!/usr/bin/env python3
-
 import argparse
 import motiflib
 import statistics
 
-
 parser = argparse.ArgumentParser(
-	description='Do motif instances look like motifs?')
+    description='Do motif instances look like motifs?')
 parser.add_argument('--file', required=True, type=str,
-	metavar='<str>', help='motif file in JASPAR format')
+    metavar='<str>', help='motif file in JASPAR format')
 parser.add_argument('--seqs', required=False, type=int, default=5,
-	metavar='<int>', help='sequences to generate [%(default)i]')
+    metavar='<int>', help='sequences to generate [%(default)i]')
 parser.add_argument('--iterations', required=False, type=int, default=5,
 	metavar='<int>', help='sequences to generate [%(default)i]')
 arg = parser.parse_args()
@@ -35,13 +32,9 @@ for i in range(1,num_seq+1):
 	avg_distance = statistics.mean(distances)
 	print(i, f'{avg_distance:.3f}',sep=', ')
 	
+
+
 # if you collected the sites back into a motif, would it look like the motif?
 # how would you measure the similarity?
 # you might want to run this many times to look at the variance
-#print(sites)
-
-	
-
-
-
-
+# print(sites)
