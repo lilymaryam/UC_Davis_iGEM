@@ -13,30 +13,27 @@ parser.add_argument('--seqs', required=False, type=int, default=5,
 	metavar='<int>', help='sequences to generate [%(default)i]')
 parser.add_argument('--iterations', required=False, type=int, default=5,
 	metavar='<int>', help='sequences to generate [%(default)i]')
-parser.add_argument('--end', required=False, type=int, default=100,
-	metavar='<int>', help='sequences to generate [%(default)i]')
 arg = parser.parse_args()
 
 n = arg.iterations
-end = arg.end
 num_seq = arg.seqs
-distances = []
+#creates the initial pwm
 motif = motiflib.read_JASPAR(arg.file)
-print()
-for i in range(end):
-	
-	for j in range(n): 
+print('number of seqs', 'distance', sep=', ')
+for i in range(1,num_seq+1): 
+	distances =[]
+	for k in range(n):
 		sites = []
-		for k in range(arg.seqs):
+		for l in range(i):
+			#a single motif from the initial pwm
 			site = motiflib.generate_site(motif)
+			#sites is a list of all motifs generated 
 			sites.append(site)
 		pwm = motiflib.new_pwm(sites)
 		distance = motiflib.compare_motifs(motif, pwm)
 		distances.append(distance)
-		print(distances)
-	print(distances)
 	avg_distance = statistics.mean(distances)
-	print(i,avg_distance)
+	print(i, f'{avg_distance:.3f}',sep=', ')
 	
 # if you collected the sites back into a motif, would it look like the motif?
 # how would you measure the similarity?
