@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 
-import math
 import argparse
 import random
 import motiflib
@@ -15,18 +15,14 @@ parser = argparse.ArgumentParser(
 	epilog=extended_help)
 parser.add_argument('--jasparfile', required=True, type=str,
 	metavar='<str>', help='jaspar file')
-parser.add_argument('--numseqp', required=False, type=int, default=5,
-	metavar='<int>', help='number of positive sequences to generate [%(default)i]')
-
-parser.add_argument('--numseqn', required=False, type=int, default=5,
-	metavar='<int>', help='number of negative sequences to generate [%(default)i]')
-
+parser.add_argument('--numseq', required=False, type=int, default=10,
+	metavar='<int>', help='number of sequences to generate [%(default)i]')
 parser.add_argument('--seqlen', required=False, type=int, default=100,
 	metavar='<int>', help='length of sequences to generate [%(default)i]')
 parser.add_argument('--mps', required=False, type=int, default=1,
 	metavar='<int>', help='number of motifs per seqeunce [%(default)i]')
 parser.add_argument('--freq', required=False, type=float, default=0.9,
-	metavar='<float>', help='optional floating point argument [%(default).3f]')
+	metavar='<float>', help='optional floating point argument [%(default).3f]')	
 parser.add_argument('--PA', required=False, type=float, default=0.25,
 	metavar='<float>', help='optional floating point argument [%(default).3f]')
 parser.add_argument('--PC', required=False, type=float, default=0.25,
@@ -39,9 +35,9 @@ parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
 arg = parser.parse_args()
 
-def generate_seq(numseqp, numseqn, seqlen, PA, PC, PG, PT):
+def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	seq = []
-	for i in range(0,arg.seqlen): # seq is a list from 0 to whatever you chose
+	for i in range(0,arg.seqlen):
 		r  = random.random()
 		if r < PA:             seq += 'a'
 		elif r < PA + PC:      seq += 'c'
@@ -49,26 +45,24 @@ def generate_seq(numseqp, numseqn, seqlen, PA, PC, PG, PT):
 		else:                  seq += 't'
 	return seq
 
-# I wanna put something here that will notice when a jaspar seq is the negative strand and insert the sequence 3' to 5'
-
 motif = motiflib.read_JASPAR(arg.jasparfile)
-pos_seqs = range(0, arg.numseqp)
-#neg_seqs = range(0, arg.numseqn)
-for i in pos_seqs:
-	seq = (generate_seq(arg.numseqn, arg.numseqp, arg.seqlen, arg.PA, arg.PC, arg.PG, arg.PT)) #this makes a sequence for all 10 spots in the range
-	r = random.random() #this randomizes shit
+for i in range(0, arg.numseq):
+	seq = (generate_seq(arg.numseq, arg.seqlen, arg.PA, arg.PC, arg.PG, arg.PT))
+	r = random.random()
 	places = []
-
-	if r < arg.freq: # if randomness is under a certain frequency
+	if r < arg.freq:
 		for j in range(0,arg.mps):
-			site = motiflib.generate_site(motif) #for every motif in it's sequence, a motif is generated
-            #motif.reverse(odd) #N
-			assert(len(motif)== len(site)) # this is where the motif gets put in the sequence
+			strand="+"
+			site = motiflib.generate_site(motif)
+			assert(len(motif)== len(site))
 			place = random.randint(0, len(seq)-len(motif))
-			places.append(f'{place}+')
+			if arg.bothstrands:
+				r = random.random()
+				if r < 0.5:
+					strand = "-"
+					site.reverse()
+			places.append(f'{place}{strand}')
 			for k in range(0,len(site)):
 				seq[place+k] = site[k]
-
 	print(f'>seq-{i} {places}')
 	print(''.join(seq))
-
