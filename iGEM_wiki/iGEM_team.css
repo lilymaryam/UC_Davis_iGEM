@@ -1,0 +1,55 @@
+/* style */
+.team{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'lato', sans-serif; font-weight: 100;
+  background-color: #0d1327ff;
+  color: white;
+  justify-content: center;
+}
+
+.team h1{
+  color: white;
+}
+
+.photo-grid-container {
+  padding: 20px;
+  color: white;
+  width: 900px;
+  margin: auto;
+}
+
+.photo-grid-container h1, h2, h3 {
+  color: white;
+
+}
+
+.photo-grid {
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  color: white;
+
+}
+
+.photo-grid-item {
+  border: 1px solid #fff;
+  width: 230px;
+  height: 230px;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=lato:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+}
+
+
+/* </style> */

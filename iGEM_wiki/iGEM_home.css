@@ -1,0 +1,71 @@
+<html>
+<style>
+
+#sideMenu, #top_title, .patrollink, #firstHeading, #home_logo, #sideMenu { display:none; }
+#content { padding:0px; width:100%; margin-top:-7px; margin-left:0px; border:none;}
+body, html {background-color:#0d1327ff; width: 100%; height: 100%;}
+#bodyContent h1, #bodyContent h2, #bodyContent h3, #bodyContent h4, #bodyContent h5 { margin-bottom: 0px; }
+#bodyContent a[href ^="https://"], .link-https { padding-right:0px;}
+
+.thing {
+ background-color: #0d1327ff;
+ font-size: 1px;
+ margin-bottom: 20px;
+ color: white;
+}
+
+.menu {
+  margin-top: 15px;
+}
+
+.menu > li {
+  display: inline;
+  margin-right: 50px;
+}
+
+.menu > li:last-of-type {
+  margin-right: 0;
+}
+
+.dropdown:hover .features-menu {
+  display: flex;
+  flex-direction: column;
+  background: #B2D6FF;
+  border-radius: 5px;
+  padding-top: 60px;
+
+  position: absolute;
+  top: -25px;
+  left: -30px;
+  z-index: 1;
+}
+
+.features-menu li {
+  list-style: none;
+  border-bottom: 1px solid #FFF;
+
+  padding: 0 40px 10px 20px;
+  margin: 10px;
+}
+
+.features-menu li:last-of-type {
+  border-bottom: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown > span {
+  z-index: 2;
+  position: relative; /*only positioned elements care about z index*/
+  cursor: pointer;
+}
+
+.features-menu {
+  display: none;
+}
+
+
+</style>
+</html>
