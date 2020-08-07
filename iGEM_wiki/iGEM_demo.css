@@ -1,0 +1,38 @@
+body {
+  background-image: url('https://2020.igem.org/wiki/images/4/4a/T--UC_Davis--Hmaster.jpg');
+  background-repeat: no-repeat;
+}
+
+.example {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.item img {
+ display:block
+}
+
+.item-absolute {
+ position: absolute;
+ top: 490px;
+ left: 335px;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 400px) {
+  body {
+
+  }
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+
+  }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 961px) {
+
+  }
+}
