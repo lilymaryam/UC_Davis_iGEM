@@ -33,6 +33,8 @@ parser.add_argument('--PT', required=False, type=float, default=0.25,
 	metavar='<float>', help='optional floating point argument [%(default).3f]')
 parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
+parser.add_argument('--negstrands', action='store_true',
+	help='on/off switch')
 arg = parser.parse_args()
 
 def generate_seq(numseq, seqlen, PA, PC, PG, PT):
@@ -54,12 +56,16 @@ for i in range(0, arg.numseq):
 		for j in range(0,arg.mps):
 			strand="+"
 			site = motiflib.generate_site(motif)
+			print(site)
 			assert(len(motif)== len(site))
 			place = random.randint(0, len(seq)-len(motif))
-			if arg.bothstrands:
+			if arg.bothstrands or arg.negstrands:
 				r = random.random()
-				if r < 0.5:
-					strand = "-"
+				if r < 0.5 and arg.bothstrands:
+					strand = '-'
+				if arg.negstrands:
+					strand = '-'
+				if strand == '-':
 					site.reverse()
 					for l in range(len(site)):
 						if site[l] == 'A':
@@ -70,7 +76,7 @@ for i in range(0, arg.numseq):
 							site[l] = 'C'
 						elif site[l] == 'T':
 							site[l] = 'A'
-			places.append(f'{place}{strand}')
+			places.append(f'{place} {strand}')
 			for k in range(0,len(site)):
 				seq[place+k] = site[k]
 	print(f'>seq-{i} {places}')
