@@ -61,6 +61,15 @@ for i in range(0, arg.numseq):
 				if r < 0.5:
 					strand = "-"
 					site.reverse()
+					for l in range(len(site)):
+						if site[l] == 'A':
+							site[l] = 'T'
+						elif site[l] == 'C':
+							site[l] = 'G'
+						elif site[l] == 'G':
+							site[l] = 'C'
+						elif site[l] == 'T':
+							site[l] = 'A'
 			places.append(f'{place}{strand}')
 			for k in range(0,len(site)):
 				seq[place+k] = site[k]
