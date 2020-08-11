@@ -1,4 +1,5 @@
 import random
+import math
 
 def read_JASPAR(jasparfile):
 	motif = []
@@ -209,33 +210,110 @@ def local_motcompare(motif1, motif2):
 				bestfit = distances[i]
 				fitindex = i
 	return bestfit, bestfit/max_score
+	
+def score_motifbit(motif):
+	score = 0
+	max_score = 2*len(motif)
+	for i in range(len(motif)):
+		entropy = 0
+		pseudos = 0
+		for nt in motif[i]:
+			prob = motif[i][nt]
+			if prob == 0:
+				continue
+			entropy -= prob* math.log2(prob)
+		bits = 2 - entropy - pseudos*.1
+		score += bits
+	if max_score > 0:
+		p = score/max_score
+	else:
+		p = ''
+	return score, p
 
+	
+	
+	
 if __name__ == '__main__':
-	
-	bkgd = {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25}
-	motifs = [
-		[],
-		[{'A':0.25, 'C':0.25, 'G':0.25, 'T':0.25}],
-		[{'A':0.50, 'C':0.50, 'G':0.00, 'T':0.00}],
-		[{'A':1.00, 'C':0.00, 'G':0.00, 'T':0.00}],
-		[
-			{'A':0.25, 'C':0.25, 'G':0.25, 'T':0.25},
-			{'A':1.00, 'C':0.00, 'G':0.00, 'T':0.00}
-		],
+	m = [
+	{'A':.25, 'C':.25, 'G':.25, 'T':.25},
+	{'A':1, 'C':0, 'G':0, 'T':0},
+	{'A':.75, 'C':0, 'G':.25, 'T':0}
 	]
-
-	for i in range(len(motifs)):
-		for j in range(len(motifs)):
-			lij = local_motcompare(motifs[i], motifs[j])
-			lji = local_motcompare(motifs[j], motifs[i])
-			gij = global_motcompare(motifs[i], motifs[j], bkgd)
-			gji = global_motcompare(motifs[i], motifs[j], bkgd)
-			assert(lij == lji)
-			assert(gij == gji)
-			print(i, j, lij, gij)
+	m1 = []
+	m2 = [
+	{'A':1, 'C':0, 'G':0, 'T':0},
+	{'A':1, 'C':0, 'G':0, 'T':0},
+	{'A':1, 'C':0, 'G':0, 'T':0}
 	
-	test1 = pos_accuracy(16,16,16,20)
-	print(test1)
+	]
+	m3 = [
+	{'A':.25, 'C':.25, 'G':.25, 'T':.25},
+	{'A':.25, 'C':.25, 'G':.25, 'T':.25},
+	{'A':.25, 'C':.25, 'G':.25, 'T':.25},
+	]
+	print(score_motifbit(m))
+	print(score_motifbit(m1))
+	print(score_motifbit(m2))
+	print(score_motifbit(m3))
 
+	'''
+	m1 = []
+	m2 = [
+		{'A':0, 'C':0, 'G':0, 'T':1},
+		{'A':.22, 'C':.28, 'G':0, 'T':.5}
+		]
+	m3 = [
+		{'A':.25, 'C':.25, 'G':.5, 'T':0},
+		{'A':1, 'C':0, 'G':0, 'T':0},
+		{'A':0, 'C':1, 'G':0, 'T':0},
+		
+		]
+	
+	
+	
+	#assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
+	#assert(local_motcompare(m1, m2) == 0) # minimum valu
+
+	dl11 = local_motcompare(m2, m2)
+	dl12 = local_motcompare(m1, m1)
+	dl21 = local_motcompare(m2, m3)
+	dl22 = local_motcompare(m3, m3)
+	print(dl11, dl12, dl21, dl22)
+
+	dg11 = global_motcompare(m1, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg12 = global_motcompare(m1, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg21 = global_motcompare(m2, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg22 = global_motcompare(m2, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	dg33 = global_motcompare(m3, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
+	print(dg11)
+	print(dg12)
+	print(dg21)
+	print(dg22)
+	print(dg33)
+
+	dl11 = compare_motifs(m1, m1)
+	dl12 = local_motcompare(m1, m2)
+	dl21 = local_motcompare(m2, m1)
+	dl22 = local_motcompare(m2, m2)
+	print(dl11, dl12, dl21, dl22)
+
+	site = []
+	'''
+	
+
+		
+		
+		
+			
+		
+			
+			
+#test code	
+#motif1 = read_JASPAR('Jaspar/MA0265.1.jaspar')
+#motif2 = read_JASPAR('Jaspar/MA0266.1.jaspar')
+#print(motifcompare(motif1,motif2))
+#print(globalcompare(motif1,motif2))
+
+	
 	
 	
