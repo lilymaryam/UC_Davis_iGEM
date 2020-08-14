@@ -37,6 +37,8 @@ parser.add_argument('--negstrands', action='store_true',
 	help='on/off switch')
 arg = parser.parse_args()
 
+assert(arg.PA + arg.PC + arg.PG + arg.PT == 1.0)
+
 def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	seq = []
 	for i in range(0,arg.seqlen):
@@ -56,7 +58,6 @@ for i in range(0, arg.numseq):
 		for j in range(0,arg.mps):
 			strand="+"
 			site = motiflib.generate_site(motif)
-			print(site)
 			assert(len(motif)== len(site))
 			place = random.randint(0, len(seq)-len(motif))
 			if arg.bothstrands or arg.negstrands:
