@@ -83,7 +83,7 @@ def pos_accuracy(mpos,jpos,mw,jw):
 	
 #uses manhattan distance (edit distance) to compare two pwms
 #delete this function?
-		
+#this function is superfluous
 def compare_motifs(motif1, motif2):
 	if len(motif1) == len(motif2):
 		d = 0
