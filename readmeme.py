@@ -32,6 +32,7 @@ def read_memetxt(memetxt):
 						beg = int(l[1])
 						pval = float(l[2])
 					sites.append((motifid,strand,seq,beg,pval))
+				#could potentially read out info about the motifs
 				while True:
 					line = mt.readline()
 					if line.startswith('letter-probability matrix'):
@@ -110,7 +111,6 @@ def memepwm(memeouttxt): #'meme_out/meme.txt'
 				if line.startswith('letter-probability matrix'):
 					m = []
 					l = line.split()
-					#print(l)
 					wid = int(l[5])
 					e_val = float(l[9])
 					for i in range(wid):
@@ -126,6 +126,7 @@ def memepwm(memeouttxt): #'meme_out/meme.txt'
 					nummot += 1
 	return motifs, motif_stats
 
+#are variable names too specific?
 def read_testmotif(motif_file):
 	jpositions = []
 	seqnum = 0
