@@ -13,20 +13,25 @@ parser.add_argument('--jasparfile', required=True, type=str,
 	metavar='<str>', help='Path to jaspar directory')
 parser.add_argument('--memepath', required=True, type=str,
 	metavar='<str>', help='path to meme software')
-parser.add_argument('--maxpromoterlength', required=False, type=int, default=400,
-	metavar='<int>', help='maximum length of generated promoters [%(default)i]')
-parser.add_argument('--promoterlengthstep', required=False, type=int, default=100,
-	metavar='<int>', help='distance between promoter lengths being tested [%(default)i]')
+parser.add_argument('--maxpromoterlength', required=False, type=int, 
+	default=400,metavar='<int>', help='maximum length of generated promoters\
+	 [%(default)i]')
+parser.add_argument('--promoterlengthstep', required=False, type=int,
+	default=100, metavar='<int>', help='distance between promoter lengths\
+	 being tested [%(default)i]')
 parser.add_argument('--maxnumseq', required=False, type=int, default=20,
-	metavar='<int>', help='maximum number of generated promoters [%(default)i]')
+	metavar='<int>', help='maximum number of generated promoters \
+	[%(default)i]')
 parser.add_argument('--numseqstep', required=False, type=int, default=5,
-	metavar='<int>', help='distance between number of promoter seqs [%(default)i]')
+	metavar='<int>', help='distance between number of promoter seqs\
+	 [%(default)i]')
 parser.add_argument('--nummotifs', required=False, type=int, default=1,
 	metavar='<int>', help='number of motifs for meme to find [%(default)i]')
 parser.add_argument('--maxmarkov', required=False, type=int, default=1,
 	metavar='<int>', help='highest markov order [%(default)i]')
-parser.add_argument('--motiffrequency', required=False, type=float, default=0.9,
-	metavar='<float>', help='background probability of A [%(default).3f]')
+parser.add_argument('--motiffrequency', required=False, type=float, 
+	default=0.9, metavar='<float>', help='background probability of A \
+	[%(default).3f]')
 parser.add_argument('--PA', required=False, type=float, default=0.25,
 	metavar='<float>', help='background probability of A [%(default).3f]')
 parser.add_argument('--PC', required=False, type=float, default=0.25,
@@ -64,7 +69,8 @@ model = ['zoops', 'oops', 'anr']
 background = {'A':arg.PA,'C':arg.PC,'G':arg.PG,'T':arg.PT}
 freq = arg.motiffrequency
 
-def convert_argtovar(maxpromlength, promoterstep, maxnumseq,numseqstep, maxmarkov):
+def convert_argtovar(maxpromlength, promoterstep, maxnumseq,numseqstep,\
+maxmarkov):
 	promoter = []
 	num_seq = []
 	markov_order = []
@@ -84,41 +90,84 @@ arg.promoterlengthstep,arg.maxnumseq,arg.numseqstep,arg.maxmarkov)
 def generate_promoter(jasparfile, p, n, freq, background):
 	tmpfile = f'/tmp/testmotif{os.getpid()}.fa' 
 	cmd = f'python3 noahpalooza.py --jasparfile {arg.jasparfile} \
-	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC {background["C"]}\
-	--PG {background["G"]} --PT {background["T"]} --bothstrands > {tmpfile} '
+	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
+	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
+	--bothstrands > {tmpfile} '
 	os.system(cmd)
 	return tmpfile
 	
 def run_meme(promoterfile,m,o,nummotifs):
-	meme = f'{arg.memepath} {promoterfile} -dna -markov_order {o} -mod {m} -nmotifs \
-	{nummotifs} -revcomp'
+	meme = f'{arg.memepath} {promoterfile} -dna -markov_order {o} -mod {m} \
+	-nmotifs {nummotifs} -revcomp'
 	os.system(meme)
 	meme_info = readmeme.read_memetxt('meme_out/meme.txt')
-	motifs = readmeme.memepwm('meme_out/meme.txt')
-	return motifs
+	motifs, motif_info = readmeme.memepwm('meme_out/meme.txt')
+	return motifs, meme_info, motif_info
 	
 #performance hands back one number 
-def performance(motif,motifs): #(p,n,m,o,)
+def performance(motif,motifs,background):
 	scores = []
 	for i in range(len(motifs)):
 		memepwm = motifs[i]
 		score = motiflib.global_motcompare(motif,memepwm,background)
 		scores.append(score)
 	return scores
+
+#memeinfo is a single line of the meme.txt file
+def present_info(meme_info, j_info, distance_scores, motif_info,jpwm):
+	seq = meme_info[2]
+	motif = meme_info[0]
+	m_strand = meme_info[1]
+	m_pos = meme_info[3]
+	p_val = meme_info[4]
+	for j in range(len(j_info)):
+		if seq == j_info[j][0]:
+			j_pos = j_info[j][1]
+			j_strand = j_info[j][2]
+			break
+	for j in range(len(motif_info)):
+		if motif == motif_info[j][0]:
+			score = distance_scores[j][0] 
+			p_score = distance_scores[j][1]
+			meme_wid = motif_info[j][1]
+			meme_eval = motif_info[j][2]
+			break
+	fpos, posdis, fl = motiflib.pos_accuracy(m_pos, j_pos,meme_wid,len(jpwm))
+	return seq,motif,m_strand,j_strand,p_val,meme_eval,score,p_score,fpos,\
+	posdis,fl
+
+
+'''
+def present_info(meme_info, j_info, distance_scores, motif_info,jpwm):
+	fn = []
+	#for i in range(0, len(meme_info)):
+	seq = meme_info[2]
+	fn.append(seq)
+	motif = meme_info[i][0]
+		m_strand = meme_info[i][1]
+		m_pos = meme_info[i][3]
+		p_val = meme_info[i][4]
+		for j in range(len(j_info)):
+			if seq == j_info[j][0]:
+				j_pos = j_info[j][1]
+				j_strand = j_info[j][2]
+				break
+		for j in range(len(motif_info)):
+			if motif == motif_info[j]:
+				score = distance_scores[j][0] 
+				p_score = distance_scores[j][1]
+				meme_wid = motif_info[j][1]
+				meme_eval = motif_info[j][2]
+				break
+		positioninfo = motiflib.pos_accuracy(m_pos, j_pos,meme_wid, len(jpwm))		
+'''		
+					
 	
-	
-	
- 
-
-
-
-
-#is this ok?
 
 
 #right thing to do, use /tmp 
-#ask operating system for a temporary file , use temp file library practice on a separate script
-#turn testmotif.fa into a temp file  
+#ask operating system for a temporary file , use temp file library practice
+# on a separate script  
 #ask for processid to add to test
 
 #python tmp file import 
@@ -126,27 +175,35 @@ def performance(motif,motifs): #(p,n,m,o,)
 
 
 
-print('jasparfile','sequence','promoter length','number of sequences','jaspar \
-position','jaspar strand','jaspar width','jaspar information','jaspar \
-information percentage','markov model','meme model','meme motifid','motif e \
-value','meme width','meme position','meme strand','p value','motif distance \
-score','motif score percentage','positional distance','false negative','false\
- positive','fail',sep=', ')
-#loops through files(should they be listed as strings or indexed thru as ints?)
-#refernce arg directly 
-#delete first loop
-motif = motiflib.read_JASPAR(arg.jasparfile)
+print('jasparfile','jaspar info','jaspar info percentage','sequence','motif','meme\
+ strand','jaspar strand','p_value','meme e value','distance score','percentage\
+  score','positional distance','false positive','false negative','fail',\
+  'promoter length','number of seqs','meme model','markov order',sep=', ')
+jpwm = motiflib.read_JASPAR(arg.jasparfile)
+bits, p_bits = motiflib.score_motifbit(jpwm)
 for p in promoter:
 	for n in numseq:
 		promoter_file = generate_promoter(arg.jasparfile,p,n,freq,background)
+		j_info = readmeme.read_testmotif(promoter_file)
 		for m in model:
 			for o in markov_order:
-				motifs = run_meme(promoter_file,m,o,arg.nummotifs)
-				perf = performance(motif,motifs)
-				print(p,n,m,o,perf)
-				
-				#print(promoter_file)
-				#print(p,n,m,o, performance(promoter_file,m,o))
+				motifs, meme_info, motif_info = run_meme(promoter_file,m,o,\
+				arg.nummotifs)
+				scores = performance(jpwm,motifs,background)
+				fn = []
+				for i in range(0,len(meme_info)):
+					seq,motif,m_strand,j_strand,p_val,meme_eval,score,p_score,\
+					fpos,posdis,fl = present_info(meme_info[i],j_info,scores,\
+					motif_info,jpwm)
+					fn.append(seq)
+					print(promoter_file,bits,p_bits,seq,motif,m_strand,j_strand,p_val,\
+					meme_eval,score,p_score,posdis,fpos,0,fl,p,n,m,o,sep=', ')
+				for i in range(len(j_info)):
+					if j_info[i][0] not in fn:
+						if j_info[i][1] != '':
+							print(promoter_file, bits,p_bits, j_info[i][0], '', '',\
+							j_info[i][2],'','','','',99,0,1,1,p,n,m,o,sep=', ')
+
 				
 '''
 	for p in promoter:
