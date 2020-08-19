@@ -54,20 +54,16 @@ def new_pwm(sites):
 		newmot[i]['T'] = T/len(sites)
 	return newmot
 	
+#meme.txt files do not find false negatives 
 def pos_accuracy(mpos,jpos,mw,jw):
-	fn = 0
 	fp = 0
 	fl = 0
 	posdis = 0
-	if jpos == '' and mpos != 'NA':
+	if jpos == '':
 		fp += 1
 		fl += 1
 		posdis = 100
-	elif jpos != '' and mpos == 'NA':
-		fn += 1
-		fl += 1
-		posdis = 99
-	elif jpos != '' and mpos!= 'NA':
+	elif jpos != '':
 		mpos = int(mpos)
 		jpos = int(jpos)
 		mend = mpos + mw
@@ -79,7 +75,7 @@ def pos_accuracy(mpos,jpos,mw,jw):
 		else:
 			fl += 1	
 			posdis = 98
-	return mpos,jpos, fn, fp, posdis, fl
+	return fp, posdis, fl
 	
 #uses manhattan distance (edit distance) to compare two pwms
 #delete this function?
@@ -119,8 +115,7 @@ def compare_motifs(motif1, motif2):
 
 def global_motcompare(motif1,motif2,background): #background info needs to be a dictionary
 	distances = []
-	score = 0 ### fix placement?
-	#is this the best way?
+	score = 0 
 	if len(motif1)==0 or len(motif2)== 0:
 		score = 0
 		distances.append(score)
@@ -234,6 +229,7 @@ def score_motifbit(motif):
 	
 	
 if __name__ == '__main__':
+	'''
 	m = [
 	{'A':.25, 'C':.25, 'G':.25, 'T':.25},
 	{'A':1, 'C':0, 'G':0, 'T':0},
@@ -273,13 +269,13 @@ if __name__ == '__main__':
 	
 	#assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
 	#assert(local_motcompare(m1, m2) == 0) # minimum valu
-
+	'''
 	dl11 = local_motcompare(m2, m2)
 	dl12 = local_motcompare(m1, m1)
 	dl21 = local_motcompare(m2, m3)
 	dl22 = local_motcompare(m3, m3)
 	print(dl11, dl12, dl21, dl22)
-
+	'''
 	dg11 = global_motcompare(m1, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
 	dg12 = global_motcompare(m1, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
 	dg21 = global_motcompare(m2, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
@@ -290,7 +286,7 @@ if __name__ == '__main__':
 	print(dg21)
 	print(dg22)
 	print(dg33)
-
+	'''
 	dl11 = compare_motifs(m1, m1)
 	dl12 = local_motcompare(m1, m2)
 	dl21 = local_motcompare(m2, m1)
