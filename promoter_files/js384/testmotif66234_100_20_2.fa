@@ -1,0 +1,40 @@
+>seq-0 []
+agcatgtgtcagacgaaactcatattcattacagtcgaccggtatgaggtgcctggctaacacgtctcatgtggatgtgcgtttagacaatacgattttt
+>seq-1 ['36 -']
+cccgccgtaacaaattctggaagcggcatatcgacaTGGCGCTACCCgataatcatttcttcaggggcgacatcctgctattatttagtacttaaacggc
+>seq-2 ['61 +']
+aacatcgggagcgtcccctgagggatgatagactcacaacgctgttgagattaggcgcccaTGCTAGCGCCAccgtaaattcacgcaccgtgaggcaccg
+>seq-3 ['73 +']
+tcgcaaccataagactgcgatttgaagtggcttgccgtctctctcactcttttaaaccaatgtttggcctcaaTGATAGCGCCGcccaaactattagcac
+>seq-4 ['2 +']
+acTGATAGCGCCAtgatatttgccagaacatgaacaggcatcatgaatagccttgcgagtccacggtggcacacccctcctacaggccctagactcatgc
+>seq-5 ['2 +']
+ctTGGTAGCGCCGagcagggtagtaggtaggaatacgcgcaaacccgattctcgctttagtagcgcgcataaccttctcatagcgcaccaataatctgtg
+>seq-6 ['66 -']
+acgccagattctaagaatgtaacgtacgtgtgtgataaacgagttccttagatcgcgctgttaataTGGCGCTAGCAgcggtgcgggaccactctggtcc
+>seq-7 ['77 -']
+ggggaaggtgggattacacggttccgcttgttggtgcattagttgatcagcctaggcggaccttctttcacctaccaTGGCGCTATCAtaagggctccca
+>seq-8 ['38 -']
+gtagcaacgtcgctggcaatacagctttactaaatctaCGGCGCCATCAgttcacttgacattggcatggcctctcaaccgaatatgccgcgcttaacgc
+>seq-9 ['3 +']
+cgcTGATAGCGCAGctagagaatcgagattacttcttaattaaacgccagaaactctagggtgggccgccggcggtagagcgatttagggaaccaggtca
+>seq-10 ['35 +']
+acgaacacaagccctgttacaaccggactttaacgGGATAGCGCCActtacagactttgcgctctaatttgtagcatctagtgctcaactgcggggctcc
+>seq-11 ['26 +']
+agctcgccccaggcattcttgaggcaTGGTAGCGCCGtcctttaagaagctcgcatgtagaacaaaatggcctgattgcactgccagaagaaggtactag
+>seq-12 ['81 -']
+ccacacaatcgcttccccactctgagctgcggatggtgcgcaagggtagcctggcctgttagagaaagccaacggctaggaTGGCGCCATCAcgtgatct
+>seq-13 ['2 +']
+tgTGGTAGCGCCAagacacgcatagagccctaagacgttcgcgacaggttcccgccacaccgcctacgagaatttcctgtgccagcatggagctatgaat
+>seq-14 ['73 +']
+ctttaagtggaggctccgtgtatgtcaccgctgccaattatccgttgaacgtcgtgtatggcattacctaaggTGGTAGCGCCGtaaggtcgcagatcag
+>seq-15 ['32 +']
+cactgtcaattgaaacctggcacgttacttaaTGGTAGCGCCTatgctcagcaacccgagtagcaaccaatacacctgctcatttaatacctcataaccc
+>seq-16 ['42 -']
+taatttagcattttaaataaggcgagattatctcgggcctgaCGGCGCTACCAcattgataatgcgaccaatttctctactcgcaaaaaaagcggatttc
+>seq-17 ['70 +']
+acgcgcatatcttgtattcaaaactggctaagtagcaaatatctcctaatgtgtcccccctgttaagagaTGATAGCGCCGcgcgggggtcacgcgtgat
+>seq-18 ['20 -']
+tatgttatctcggtctggatTGGCGCTATCActagctgtcaacatttctcgcagggggtactcggggcgggcatttctaggaacggacttatcttaaggg
+>seq-19 ['68 -']
+ggtgttattgcttgaagcgcgtaccatcggaaggaagttccagttatctatattgtgaaggactgctgCGGCGCTACCAtaagtgggttactgattgcct

@@ -1,0 +1,30 @@
+>seq-0 ['16 -']
+gagtattctcttgcctCCATGGGGGTGCAATAGCATAcaacgtggttccaatactaggacctaggccacattacacacgtgaatgtctgcaatcgttaca
+>seq-1 ['14 +']
+tgagctggaacataGATAATATTGCACCCCCTTTGgtactttgttgctagatgaaaaaagatggtgtttcttatgtcgaatacagataggggtactgcgc
+>seq-2 ['51 +']
+gtcatttagccacggtaagtaacagacgctaaatgaccaataacgcccctaTTTGATAATGCACTCCATTTGagtcatccgggatctgtgcatggctctg
+>seq-3 ['73 -']
+tttcagttttgggcacaggacgacgggcaggggcatccttccccaggcgggtgacgatagcgacgacacgaaaGCATTGAGGTGCCAATTATAAgcaagt
+>seq-4 ['72 +']
+gcatcgcccttagttccagcatatccagaggacggcgctctggctgatgcgcgcaatgatactggtgagtggTTACATATTACACCCGCTCAGtacatgg
+>seq-5 ['48 +']
+cagacgggttgcaaagtggcagtctacgtggtagtgctcgttgctcccTCAGCAAGTGCACCCCCTTGCacacaactcaaccaagtatgcacaggatgtc
+>seq-6 ['17 -']
+gacaaagctccgcagcaTCGAGTGGGAGCATTCCAGCCgcgggttcggccacggtcaataaccagatgttgaagatgtcataaagcggacatgttggaag
+>seq-7 ['29 -']
+gacgcggcatcgcgttttcatgcacacgtCGTAACAGGTGCAATGTCACAaatagaaaccgatccagtatcagtgtcggagtttgtagtggcgatgtccc
+>seq-8 ['36 -']
+ggcacaccataggcgaacataaacctaccaataccaCGAAGGGAGTGCACTAGTGTCtccggatttgagggttggccggttgtactttcgggaaacgctt
+>seq-9 ['78 +']
+gggactgttttgtgtgtacaatttggcccaagcgtactttgccgaaaaatcacaatgacttagttagggatcgacataTAGGATATTGCACCCGGTTGGc
+>seq-10 ['50 +']
+acatccacacgatcaaaatgacgacatcgccgacgacaatgggtagagggGACCCTAACGCATCCGCGACGtcgatatcgctcgataaaaaatagcattt
+>seq-11 ['31 -']
+caggatcctccgctcgatagcccgtcggagcCGATCCGGGTGCACGACGTGCacggacagcgagaccaagatccccctacttcaaaccttaagaacagtc
+>seq-12 ['65 -']
+taaggtcattctgcttggagatgactcaggaatggctacagctatagcgaaccagctcggagtaaTCGCCCGGGTGCACTATGTGCacaagatggagaag
+>seq-13 ['63 +']
+tcggatctcagtctggtcctgcggggcttgatgtgttgaaggaataagccgccatagagatatTTGAAAATTACACCCGAAATAggttcgcatcgctagg
+>seq-14 ['15 -']
+acgacgcgttagatcCGAAAGGGGTGCATTATGTAActtgtctactcttcagatagatcaatcacacacaggtcacgaggctgatcgtagggagggactt
