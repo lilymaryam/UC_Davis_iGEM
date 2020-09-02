@@ -2,9 +2,9 @@
 import os
 import sys
 import motiflib
-import readmeme
 import argparse
 import math
+import statistics
 
 # setup
 parser = argparse.ArgumentParser(
@@ -29,6 +29,8 @@ parser.add_argument('--nummotifs', required=False, type=int, default=1,
 	metavar='<int>', help='number of motifs for meme to find [%(default)i]')
 parser.add_argument('--maxmarkov', required=False, type=int, default=1,
 	metavar='<int>', help='highest markov order [%(default)i]')
+parser.add_argument('--numiterations', required=False, type=int, default=5,
+	metavar='<int>', help='iterations for condensed data [%(default)i]')
 parser.add_argument('--motiffrequency', required=False, type=float, 
 	default=0.9, metavar='<float>', help='background probability of A \
 	[%(default).3f]')
@@ -40,19 +42,11 @@ parser.add_argument('--PG', required=False, type=float, default=0.25,
 	metavar='<float>', help='background probability of G [%(default).3f]')
 parser.add_argument('--PT', required=False, type=float, default=0.25,
 	metavar='<float>', help='background probability of T [%(default).3f]')
-#parser.add_argument('--rfloat', required=True, type=float,
-#	metavar='<float>', help='required floating point argument')
-# optional arguments with default parameters
-#parser.add_argument('--dstr', required=False, type=str, default='hello',
-#	metavar='<str>', help='optional string argument [%(default)s]')
-#parser.add_argument('--dint', required=False, type=int, default=1,
-#	metavar='<int>', help='optional integer argument [%(default)i]')
-#parser.add_argument('--dfloat', required=False, type=float, default=3.14,
-#	metavar='<float>', help='optional floating point argument [%(default)f]')
-# switches
 parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
 parser.add_argument('--negstrands', action='store_true',
+	help='on/off switch')
+parser.add_argument('--condenseddata', action='store_true',
 	help='on/off switch')
 # finalization
 arg = parser.parse_args()
@@ -65,9 +59,10 @@ assert(arg.motiffrequency <= 1)
 
 
 
-model = ['zoops', 'oops', 'anr']
+model = ['zoops','oops','anr']
 background = {'A':arg.PA,'C':arg.PC,'G':arg.PG,'T':arg.PT}
 freq = arg.motiffrequency
+
 
 def convert_argtovar(maxpromlength, promoterstep, maxnumseq,numseqstep,\
 maxmarkov):
@@ -88,7 +83,7 @@ promoter,numseq,markov_order = convert_argtovar(arg.maxpromoterlength, \
 arg.promoterlengthstep,arg.maxnumseq,arg.numseqstep,arg.maxmarkov)
 
 def generate_promoter(jasparfile, p, n, freq, background):
-	tmpfile = f'/tmp/testmotif{os.getpid()}.fa' 
+	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}.fa' 
 	cmd = f'python3 noahpalooza.py --jasparfile {arg.jasparfile} \
 	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
 	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
@@ -97,12 +92,17 @@ def generate_promoter(jasparfile, p, n, freq, background):
 	return tmpfile
 	
 def run_meme(promoterfile,m,o,nummotifs):
-	meme = f'{arg.memepath} {promoterfile} -dna -markov_order {o} -mod {m} \
-	-nmotifs {nummotifs} -revcomp'
+	meme = f'{arg.memepath} {promoterfile} -dna -markov_order {o} -mod {m}\
+	-nmotifs {nummotifs}'
+	if arg.bothstrands:
+		meme=meme+' -revcomp'
+	#if arg.condenseddata:
+	#	for i in range()
 	os.system(meme)
-	meme_info = readmeme.read_memetxt('meme_out/meme.txt')
-	motifs, motif_info = readmeme.memepwm('meme_out/meme.txt')
+	meme_info = motiflib.read_memetxt('meme_out/meme.txt')
+	motifs, motif_info = motiflib.memepwm('meme_out/meme.txt')
 	return motifs, meme_info, motif_info
+	
 	
 #performance hands back one number 
 def performance(motif,motifs,background):
@@ -113,255 +113,206 @@ def performance(motif,motifs,background):
 		scores.append(score)
 	return scores
 
+	
 #memeinfo is a single line of the meme.txt file
-def present_info(meme_info, j_info, distance_scores, motif_info,jpwm):
-	seq = meme_info[2]
-	motif = meme_info[0]
-	m_strand = meme_info[1]
-	m_pos = meme_info[3]
-	p_val = meme_info[4]
-	for j in range(len(j_info)):
-		if seq == j_info[j][0]:
-			j_pos = j_info[j][1]
-			j_strand = j_info[j][2]
-			break
-	for j in range(len(motif_info)):
-		if motif == motif_info[j][0]:
-			score = distance_scores[j][0] 
-			p_score = distance_scores[j][1]
-			meme_wid = motif_info[j][1]
-			meme_eval = motif_info[j][2]
-			break
-	fpos, posdis, fl = motiflib.pos_accuracy(m_pos, j_pos,meme_wid,len(jpwm))
-	return seq,motif,m_strand,j_strand,p_val,meme_eval,score,p_score,fpos,\
-	posdis,fl
-
-
-'''
-def present_info(meme_info, j_info, distance_scores, motif_info,jpwm):
+def get_memedata(meme_info, j_info, distance_scores, motif_info,jpwm,p,n,m,o):
+	result = []
+	fp = 0
 	fn = []
-	#for i in range(0, len(meme_info)):
-	seq = meme_info[2]
-	fn.append(seq)
-	motif = meme_info[i][0]
-		m_strand = meme_info[i][1]
-		m_pos = meme_info[i][3]
-		p_val = meme_info[i][4]
+	fail_c = 0
+	for i in range(len(meme_info)):
+		seq = meme_info[i][3]
+		motif = meme_info[i][0]
+		nsites = meme_info[i][1]
+		m_strand = meme_info[i][2]
+		m_pos = meme_info[i][4]
+		p_val = meme_info[i][5]
 		for j in range(len(j_info)):
 			if seq == j_info[j][0]:
 				j_pos = j_info[j][1]
 				j_strand = j_info[j][2]
+				numjsites = j_info[j][3]
 				break
 		for j in range(len(motif_info)):
-			if motif == motif_info[j]:
+			if motif == motif_info[j][0]:
 				score = distance_scores[j][0] 
 				p_score = distance_scores[j][1]
 				meme_wid = motif_info[j][1]
-				meme_eval = motif_info[j][2]
-				break
-		positioninfo = motiflib.pos_accuracy(m_pos, j_pos,meme_wid, len(jpwm))		
-'''		
-					
+				meme_eval = motif_info[j][3]
+				break	
+		fpos, posdis, fl = motiflib.pos_accuracy(m_pos, j_pos,meme_wid,len(jpwm))
+		fp += fpos
+		fn.append(seq)
+		fail_c += fl
+		result.append((seq,motif,nsites,m_strand,j_strand,p_val,meme_eval,score,p_score,posdis, fpos, 0,fl,p,n,m,o))
+	return result,fp,fn,fail_c
+
+
+def find_falsenegs(fn,j_info):
+	false_negs = []
+	for i in range(len(j_info)):
+		if j_info[i][0] not in fn:
+			if j_info[i][1] != '':
+					false_negs.append(( j_info[i][0],'','','',j_info[i][2],'','','','',99,0,1,1,p,n,m,o))
+	return false_negs
+
+			
+
+def present_info(promoter_file,results, bits,p_bits,scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o):
+	present = []
+	false_neg = find_falsenegs(fn, j_info)
+	if arg.condenseddata:
+		for i in range(len(motif_info)):
+			mot = motif_info[i][0]
+			numsites = int(motif_info[i][2])
+			success = numsites-fail_c
+			e_val = float(motif_info[i][3])
+			dis = scores[i][0]
+			dis_p = scores[i][1]
+			present = ((promoter_file,mot, numsites,bits,p_bits, e_val, dis,dis_p,fail_c/numsites,success/numsites,fp/numsites,len(false_neg),p,n,m,o))		
+	else:
+		 for i in range(len(results)):
+		 	present.append((results[i]))
+		 for i in range(len(false_neg)):
+		 	present.append(false_neg[i])
+	return present
+
+
+def get_sequenceinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm):
+	seqinfo = []
+	promoter_file = generate_promoter(jasparfile,p,n,freq,background)
+	j_info = motiflib.read_testmotif(promoter_file)
+	motifs, meme_info, motif_info = run_meme(promoter_file,m,o,nummotifs)
+	scores = performance(jpwm,motifs,background)
+	results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,motif_info,jpwm,p,n,m,o)
+	false_negs = find_falsenegs(fn,j_info)
+	for i in range(len(results)):
+		seqinfo.append((results[i]))
+	for i in range(len(false_negs)):
+		seqinfo.append((false_negs[i]))
+	return seqinfo	
+
+
+def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,numiterations):
+	result = []
+	final = []
+	for i in range(numiterations):
+		promoter_file = generate_promoter(jasparfile,p,n,freq,background)
+		j_info = motiflib.read_testmotif(promoter_file)
+		motifs, meme_info, motif_info = run_meme(promoter_file,m,o,nummotifs)
+		scores = performance(jpwm,motifs,background)
+		results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,motif_info,jpwm,p,n,m,o)
+		present = present_info(promoter_file,results,bits,p_bits,scores,fp,fn,fail_c,j_info,motif_info,p,n,m,o)
+		result.append(present)
+	#print(result)
+	if len(result) > 1:
+		avg_nsites = []
+		avg_score = []
+		avg_eval = []
+		avg_score = []
+		avg_pscore = []
+		avg_frate = []
+		avg_srate = []
+		avg_fprate = []
+		avg_fn = []
+		for i in range(len(result)):
+			avg_nsites.append(result[i][2])
+			avg_eval.append(result[i][5])
+			avg_score.append(result[i][6])
+			avg_pscore.append(result[i][7])
+			avg_frate.append(result[i][8])
+			avg_srate.append(result[i][9])
+			avg_fprate.append(result[i][10])
+			avg_fn.append(result[i][11])
+		final.append((result[0][0],result[0][1],statistics.mean(avg_nsites),\
+		result[0][3],result[0][4], statistics.mean(avg_eval),statistics.mean(avg_score),\
+		statistics.mean(avg_pscore),statistics.mean(avg_frate), statistics.mean(avg_srate),\
+		statistics.mean(avg_fprate),statistics.mean(avg_fn),p,n,m,o,numiterations,statistics.stdev(avg_eval),statistics.stdev(avg_score)\
+		,statistics.stdev(avg_pscore),statistics.stdev(avg_frate),statistics.stdev(avg_srate),statistics.stdev(avg_fprate)\
+		,statistics.stdev(avg_fn)))
+		return final
+	else:
+		return result
+
+		
+	'''
+	avg_nsites = 0
+	avg_score = 0
+	avg_eval = 0 
+	avg_score = 0
+	avg_pscore = 0
+	avg_frate = 0
+	avg_srate = 0
+	avg_fprate = 0
+	avg_fn = 0
+	for i in range(len(result)):
+		avg_nsites += result[i][2]
+		avg_eval += result[i][5]
+		avg_score += result[i][6]
+		avg_pscore += result[i][7]
+		avg_frate += result[i][8]
+		avg_srate += result[i][9]
+		avg_fprate += result[i][10]
+		avg_fn += result[i][11]
 	
+	final.append((result[0][0],result[0][1],avg_nsites/len(result),\
+	result[0][3],result[0][4], avg_eval/len(result),avg_score/len(result),\
+	avg_pscore/len(result),avg_frate/len(result), avg_srate/len(result),\
+	avg_fprate/len(result),avg_fn/len(result),p,n,m,o,numiterations\
+	,sta))
+	'''	
 
 
-#right thing to do, use /tmp 
-#ask operating system for a temporary file , use temp file library practice
-# on a separate script  
+
+#right thing to do, use /tmp  
 #ask for processid to add to test
 
 #python tmp file import 
 #ask in command line what they want to name it 
 
 
-
-print('jasparfile','jaspar info','jaspar info percentage','sequence','motif','meme\
- strand','jaspar strand','p_value','meme e value','distance score','percentage\
-  score','positional distance','false positive','false negative','fail',\
-  'promoter length','number of seqs','meme model','markov order',sep=', ')
+if arg.condenseddata:
+	print('promoter_file','motif','number_of_sites','jaspar_file_info','jaspar_info_percentage','e_val','distance','distance_percentage','failure_rate',\
+	'success_rate','false_positive_rate','false_negative','promoter_size',\
+	'number_of_sequences','model','markov_order','iterations','stdev(avg_eval)','stdev(avg_score)'\
+		,'stdev(avg_pscore)','stdev(avg_frate)','stdev(avg_srate)','stdev(avg_fprate)'\
+		,'stdev(avg_fn)',sep=', ')
+else:
+	print('sequence','motif','number_of_sites','m_strand', 'j_strand', 'p_val', 'meme_e_value',\
+	'score', 'score_percentage','position_distance', 'false_positive','false_negative','fail','promoter_length', 'number\
+	of sequences', 'model', 'markov_order',sep=', ')
+#fnum = 0
 jpwm = motiflib.read_JASPAR(arg.jasparfile)
 bits, p_bits = motiflib.score_motifbit(jpwm)
 for p in promoter:
 	for n in numseq:
 		promoter_file = generate_promoter(arg.jasparfile,p,n,freq,background)
-		j_info = readmeme.read_testmotif(promoter_file)
+		j_info = motiflib.read_testmotif(promoter_file)
 		for m in model:
 			for o in markov_order:
 				motifs, meme_info, motif_info = run_meme(promoter_file,m,o,\
 				arg.nummotifs)
 				scores = performance(jpwm,motifs,background)
-				fn = []
-				for i in range(0,len(meme_info)):
-					seq,motif,m_strand,j_strand,p_val,meme_eval,score,p_score,\
-					fpos,posdis,fl = present_info(meme_info[i],j_info,scores,\
-					motif_info,jpwm)
-					fn.append(seq)
-					print(promoter_file,bits,p_bits,seq,motif,m_strand,j_strand,p_val,\
-					meme_eval,score,p_score,posdis,fpos,0,fl,p,n,m,o,sep=', ')
-				for i in range(len(j_info)):
-					if j_info[i][0] not in fn:
-						if j_info[i][1] != '':
-							print(promoter_file, bits,p_bits, j_info[i][0], '', '',\
-							j_info[i][2],'','','','',99,0,1,1,p,n,m,o,sep=', ')
+				results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,\
+				motif_info,jpwm,p,n,m,o)
+				if not arg.condenseddata:
+					present = present_info(promoter_file, results,bits,p_bits, scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
+					#present = get_sequenceinfo(arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm)
+				else:
+					#present = present_info(results,bits,p_bits, scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
+					present = get_motifinfo(arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm,arg.numiterations)
+				#print(present)
+				for i in range(len(present)):
+					row = str(present[i])[1:-1]
+					print(row)
+				if not arg.condenseddata:
+					print('end')
+				#fnum += 1
+				
+			
+				
 
-				
-'''
-	for p in promoter:
-		for n in numseq:
-			
-			#put everything below here in 3ish functions
-			print(p,n,performance(p,n,motif))
-			#note that motifapalooza must be found in the same directory 
-			
-			#uses program noahpalooza (name can be changed)#
-			#able to generate different files depending on cmd args
-			#is this the best way to do it ?
-			if arg.bothstrands:
-			#contruct comannd append optional argument to end 
-			#don't need to test this, do bothstrands all the time 
-			
-			#use this to test noahpalooza
-				cmd = f'python3 noahpalooza.py --jasparfile {filepath} \
-			 	--numseq {n} --seqlen {p} --PA {arg.PA} --PC {arg.PC} --PG\
-			 	 {arg.PG} --PT {arg.PT} --bothstrands > testmotif{f}.fa '
-			if arg.negstrands:
-				cmd = f'python3 noahpalooza.py --jasparfile {filepath} \
-			 	--numseq {n} --seqlen {p} --PA {arg.PA} --PC {arg.PC} --PG \
-			 	{arg.PG} --PT {arg.PT} --negstrands > testmotif{f}.fa '
-			else:
-			 	cmd = f'python3 noahpalooza.py --jasparfile {filepath} \
-			 	--numseq {n} --seqlen {p} --PA {arg.PA} --PC {arg.PC} --PG \
-			 	{arg.PG} --PT {arg.PT}  > testmotif{f}.fa '
-			os.system(cmd)
-			
-			#iterates through the three models of meme (probably hardcoded)
-			for m in model:
-				#loops through markov models (hardcoded,don't need more than 2)
-				
-				for o in markovorder:
-						#meme is run in this loop and data is parsed
-						#is there a better way to code optional arguments
-						#(what is the method used in memerunner?)
-						#should i add more parameters that will always be there?
-						#modify so no repeat
-						if arg.bothstrands or arg.negstrands:
-							meme = f'{arg.memepath} testmotif{f}.fa -dna \
-							-markov_order {o} -mod {m} -nmotifs \
-							{arg.nummotifs} -revcomp'
-						else: 
-							meme = f'{arg.memepath} testmotif{f}.fa -dna \
-							-markov_order {o} -mod {m} -nmotifs \
-							{arg.nummotifs}'
-						os.system(meme)
-						
-						
-						#write a function to do all this 
-						#site info
-						
-						#read_memetxt reads meme.txt and outputs every memesite
-						meme_info = readmeme.read_memetxt('meme_out/meme.txt')
-						#read_testmotif accepts file generated from 
-						#motifapalooza (fasta form) and reads the > information 
-						
-						j_info = readmeme.read_testmotif(f'testmotif{f}.fa')
-						#read_JASPAR takes a jaspar file and converts info into
-						#a pwm in the form of an array of dictionaries
-						
-						jasparpwm = motiflib.read_JASPAR(filepath)
-						#memepwm takes the meme.txt file and outputs two arrays
-						#one contains a list of the motifs in pwm form
-						#the other contains info regarding the motifs 
-						#(is this a good way to do it ?)
-						
-						mememotifs, motif_info = \
-						readmeme.memepwm('meme_out/meme.txt')
-						#score_motifbit reads in a pwm in array/dictionary form
-						#and outputs a tuple containing information of pwm 
-						#and percentage of total possible info for that pwm* 
-						#*(is that relevant?)
-						
-						bits = motiflib.score_motifbit(jasparpwm) 
-						#distance scores will collect scores between each motif 
-						#and the jaspar file in order to be referenced later 
-						#(necessary?)
-						
-						distance_scores = []
-						#fn collects all sequences found in meme.txt so that 
-						#skipped sequences can be analyzed for false negatives
-						#(necessary?)
-						fn = []
-						#this loop is explicitly for creating distance scores
-						#(only needs to be done once)
-						# is this the best place/best method?
-						
-						for i in range(0,len(mememotifs)):
-							memepwm = mememotifs[i]
-							#can distance scores contain motif_info?
-							pwmdistance = motiflib.global_motcompare(jasparpwm\
-							, memepwm,background)
-							distance_scores.append(pwmdistance)
-						#this loop is reading through all sites pulled from 
-						#meme.txt
-						
-						
-						#data will be printed as it is read
-						for i in range(0, len(meme_info)):
-							#better not to make variables?
-							seq = meme_info[i][2]
-							#used to catch false negatives
-							fn.append(seq)
-							motif = meme_info[i][0]
-							m_strand = meme_info[i][1]
-							m_pos = meme_info[i][3]
-							p_val = meme_info[i][4]
-							#this loop iterates through j info to find seq\
-							#info related to location of jaspar motifs
-							#must be done after sequences is identified
-							#better way to do it?
-							for j in range(len(j_info)):
-								if seq == j_info[j][0]:
-									j_pos = j_info[j][1]
-									j_strand = j_info[j][2]
-									break
-							#this loop iterates through motifinfo to match \
-							#motif to information
-							#must be done after motif is identified
-							#combine distance score? or more computiing power
-							#better way to do it ?
-							for j in range(len(motif_info)):
-								if motif == motif_info[j][0]:
-									distance_score = distance_scores[j]
-									meme_wid = motif_info[j][1]
-									meme_eval = motif_info[j][2]
-									break	
-							#outputs information about failure, false positive\
-							#and distance between start points of motifs
-							#doesn't run very well need advice
-							positioninfo = motiflib.pos_accuracy(m_pos, j_pos,\
-							len(memepwm), len(jasparpwm))
-							#data display	
-							#prints each iteration of meme as a single row of \
-							#data with all parameters listed
-							print(f,seq,p,n,j_pos,j_strand,len(jasparpwm),\
-							bits[0],bits[1],o,m,motif,meme_eval,meme_wid, \
-							m_pos,m_strand,p_val,distance_score[0],\
-							distance_score[1], positioninfo[4],\
-							positioninfo[2],positioninfo[3],positioninfo[5]\
-							,sep=', ')
-						#is this needed/done well?
-						#catches false negatives
-						for i in range(len(j_info)):
-							if j_info[i][0] not in fn:
-								if j_info[i][1] != '':
-									print(f, j_info[i][0], '', '',j_info[i][1]\
-									,j_info[i][2],len(jasparpwm),bits[0],\
-									bits[1],'','', '', '', '', '', '', '', '',\
-									'', 99,1,0,1,sep=', ')
-'''
-		
-
-				
-						
+	
 
 
 
