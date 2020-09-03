@@ -84,7 +84,7 @@ arg.promoterlengthstep,arg.maxnumseq,arg.numseqstep,arg.maxmarkov)
 
 def generate_promoter(jasparfile, p, n, freq, background):
 	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}.fa' 
-	cmd = f'python3 noahpalooza.py --jasparfile {arg.jasparfile} \
+	cmd = f'python3 motifapalooza.py --jasparfile {arg.jasparfile} \
 	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
 	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
 	--bothstrands > {tmpfile} '
@@ -140,11 +140,13 @@ def get_memedata(meme_info, j_info, distance_scores, motif_info,jpwm,p,n,m,o):
 				meme_wid = motif_info[j][1]
 				meme_eval = motif_info[j][3]
 				break	
-		fpos, posdis, fl = motiflib.pos_accuracy(m_pos, j_pos,meme_wid,len(jpwm))
+		fpos, posdis, fl = motiflib.pos_accuracy(m_pos, j_pos,meme_wid,\
+		len(jpwm))
 		fp += fpos
 		fn.append(seq)
 		fail_c += fl
-		result.append((seq,motif,nsites,m_strand,j_strand,p_val,meme_eval,score,p_score,posdis, fpos, 0,fl,p,n,m,o))
+		result.append((seq,motif,nsites,m_strand,j_strand,p_val,meme_eval,\
+		score,p_score,posdis, fpos, 0,fl,p,n,m,o))
 	return result,fp,fn,fail_c
 
 
@@ -204,7 +206,6 @@ def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,numiteration
 		results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,motif_info,jpwm,p,n,m,o)
 		present = present_info(promoter_file,results,bits,p_bits,scores,fp,fn,fail_c,j_info,motif_info,p,n,m,o)
 		result.append(present)
-	#print(result)
 	if len(result) > 1:
 		avg_nsites = []
 		avg_score = []
@@ -272,42 +273,42 @@ def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,numiteration
 
 
 if arg.condenseddata:
-	print('promoter_file','motif','number_of_sites','jaspar_file_info','jaspar_info_percentage','e_val','distance','distance_percentage','failure_rate',\
-	'success_rate','false_positive_rate','false_negative','promoter_size',\
-	'number_of_sequences','model','markov_order','iterations','stdev(avg_eval)','stdev(avg_score)'\
-		,'stdev(avg_pscore)','stdev(avg_frate)','stdev(avg_srate)','stdev(avg_fprate)'\
-		,'stdev(avg_fn)',sep=', ')
+	print('promoter_file','motif','number_of_sites','jaspar_file_info',\
+	'jaspar_info_percentage','e_val','distance','distance_percentage',\
+	'failure_rate','success_rate','false_positive_rate','false_negative',\
+	'promoter_size','number_of_sequences','model','markov_order','iterations'\
+	,'stdev(avg_eval)','stdev(avg_score)','stdev(avg_pscore)',\
+	'stdev(avg_frate)','stdev(avg_srate)','stdev(avg_fprate)','stdev(avg_fn)'\
+	,sep=', ')
 else:
-	print('sequence','motif','number_of_sites','m_strand', 'j_strand', 'p_val', 'meme_e_value',\
-	'score', 'score_percentage','position_distance', 'false_positive','false_negative','fail','promoter_length', 'number\
-	of sequences', 'model', 'markov_order',sep=', ')
-#fnum = 0
+	print('sequence','motif','number_of_sites','m_strand', 'j_strand', 'p_val'\
+	, 'meme_e_value','score', 'score_percentage','position_distance', \
+	'false_positive','false_negative','fail','promoter_length', 'number of \
+	sequences', 'model', 'markov_order',sep=', ')
 jpwm = motiflib.read_JASPAR(arg.jasparfile)
-bits, p_bits = motiflib.score_motifbit(jpwm)
+#bits, p_bits = motiflib.score_motifbit(jpwm)
 for p in promoter:
 	for n in numseq:
-		promoter_file = generate_promoter(arg.jasparfile,p,n,freq,background)
-		j_info = motiflib.read_testmotif(promoter_file)
+		#promoter_file = generate_promoter(arg.jasparfile,p,n,freq,background)
+		#j_info = motiflib.read_testmotif(promoter_file)
 		for m in model:
 			for o in markov_order:
-				motifs, meme_info, motif_info = run_meme(promoter_file,m,o,\
-				arg.nummotifs)
-				scores = performance(jpwm,motifs,background)
-				results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,\
-				motif_info,jpwm,p,n,m,o)
+				#motifs, meme_info, motif_info = run_meme(promoter_file,m,o,\
+				#arg.nummotifs)
+				#scores = performance(jpwm,motifs,background)
+				#results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,\
+				#motif_info,jpwm,p,n,m,o)
 				if not arg.condenseddata:
-					present = present_info(promoter_file, results,bits,p_bits, scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
-					#present = get_sequenceinfo(arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm)
+					#present = present_info(promoter_file, results,bits,p_bits, scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
+					present = get_sequenceinfo(arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm)
 				else:
 					#present = present_info(results,bits,p_bits, scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
 					present = get_motifinfo(arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm,arg.numiterations)
-				#print(present)
 				for i in range(len(present)):
 					row = str(present[i])[1:-1]
 					print(row)
 				if not arg.condenseddata:
 					print('end')
-				#fnum += 1
 				
 			
 				
