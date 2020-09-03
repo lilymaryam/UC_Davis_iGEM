@@ -3,6 +3,7 @@
 import argparse
 import random
 import motiflib
+import math
 
 extended_help = """
 %(prog)s is a program that simulates promoter regions by embedding binding sites
@@ -33,7 +34,12 @@ parser.add_argument('--PT', required=False, type=float, default=0.25,
 	metavar='<float>', help='optional floating point argument [%(default).3f]')
 parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
+parser.add_argument('--negstrands', action='store_true',
+	help='on/off switch')
 arg = parser.parse_args()
+
+assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
+assert(arg.freq <= 1.0)
 
 def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	seq = []
@@ -52,10 +58,28 @@ for i in range(0, arg.numseq):
 	places = []
 	if r < arg.freq:
 		for j in range(0,arg.mps):
+			strand="+"
 			site = motiflib.generate_site(motif)
 			assert(len(motif)== len(site))
 			place = random.randint(0, len(seq)-len(motif))
-			places.append(f'{place}+')
+			if arg.bothstrands or arg.negstrands:
+				r = random.random()
+				if r < 0.5 and arg.bothstrands:
+					strand = '-'
+				if arg.negstrands:
+					strand = '-'
+				if strand == '-':
+					site.reverse()
+					for l in range(len(site)):
+						if site[l] == 'A':
+							site[l] = 'T'
+						elif site[l] == 'C':
+							site[l] = 'G'
+						elif site[l] == 'G':
+							site[l] = 'C'
+						elif site[l] == 'T':
+							site[l] = 'A'
+			places.append(f'{place} {strand}')
 			for k in range(0,len(site)):
 				seq[place+k] = site[k]
 	print(f'>seq-{i} {places}')
