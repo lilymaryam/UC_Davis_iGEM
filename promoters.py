@@ -6,7 +6,7 @@ import pathlib
 import json
 
 MIN_GENES_PER_CLUSTER = 4
-UPSTREAM = 100
+UPSTREAM = 1000
 
 def get_clusters(abbr):
 	file = f'BGC/{abbr}__BGC.txt'
@@ -94,4 +94,4 @@ with open('public_species.txt') as fp:
 					fp.write(f'{seq[c1:c2]}\n')
 
 		n += 1
-		if n > 6: sys.exit() # remove this for full processing
+		#if n > 6: sys.exit() # remove this for full processing
