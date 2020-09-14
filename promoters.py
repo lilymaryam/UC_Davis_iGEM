@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
+import argparse
+import pathlib
 import sys
 import os
-import pathlib
-import json
-
-MIN_GENES_PER_CLUSTER = 4
-UPSTREAM = 1000
 
 def get_clusters(abbr):
 	file = f'BGC/{abbr}__BGC.txt'
@@ -54,6 +51,20 @@ def get_seq(abbr, scaff):
 	print('whoops')
 	sys.exit(1)
 
+
+
+parser = argparse.ArgumentParser(description='JGI promoter processing')
+parser.add_argument('--min_genes', type=int, default=4,
+	metavar='<int>', help='minimum genes per cluster [%(default)i]')
+parser.add_argument('--upstream', type=int, default=1000,
+	metavar='<int>', help='length of promoter region [%(default)i]')
+parser.add_argument('--testing', type=int, default=0,
+	metavar='<int>', help='short-circuit for testing [%(default)i]')
+parser.add_argument('--summary', type=str, default='summary.txt',
+	metavar='<path>', help='text file of information [%(default)s]')
+arg = parser.parse_args()
+
+
 genes = {}
 with open('gene_coordinates.txt') as fp:
 	for line in fp.readlines():
@@ -67,6 +78,7 @@ with open('gene_coordinates.txt') as fp:
 		genes[abbr][gid] = (beg, end, strand)
 
 n = 0
+summary = []
 with open('public_species.txt') as fp:
 	for line in fp.readlines():
 		abbr, genus, species = line.split('\t')
@@ -74,7 +86,7 @@ with open('public_species.txt') as fp:
 		
 		clusters = get_clusters(abbr)
 		for cid in clusters:
-			if len(clusters[cid]['genes']) < MIN_GENES_PER_CLUSTER: continue
+			if len(clusters[cid]['genes']) < arg.min_genes: continue
 			with open(f'Promoters/{abbr}/{cid}.fa', 'w') as fp:
 				seq = get_seq(abbr, clusters[cid]['scaff'])
 				for gid in clusters[cid]['genes']:
@@ -82,16 +94,29 @@ with open('public_species.txt') as fp:
 					
 					c1, c2 = None, None
 					if strand == '+':
-						c1 = beg - UPSTREAM
+						c1 = beg - arg.upstream
 						if c1 < 0: c1 = 0
 						c2 = beg
 					else:
 						c1 = end
-						c2 = end + UPSTREAM
+						c2 = end + arg.upstream
 						if c2 > len(seq): c2 = len(seq)
 					
-					fp.write(f'>{abbr}:{cid}:{gid} {UPSTREAM} {strand}\n')
+					fp.write(f'>{abbr}:{cid}:{gid} {arg.upstream} {strand}\n')
 					fp.write(f'{seq[c1:c2]}\n')
+			
+			size = clusters[cid]['size']
+			desc = clusters[cid]['desc']
+			scaf = clusters[cid]['scaff']
+			
+			summary.append((abbr, str(cid), str(size), desc, scaf))
 
 		n += 1
-		#if n > 6: sys.exit() # remove this for full processing
+		if arg.testing > 0 and n >= arg.testing: break
+
+with open(arg.summary, 'w') as fp:
+	fp.write(f'Species\tClusterID\tGenes\tType\tLocation\n')
+	for cluster in summary:
+		fp.write(('\t'.join(cluster)))
+		fp.write('\n')
+
