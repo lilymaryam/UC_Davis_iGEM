@@ -3,8 +3,8 @@ import sys
 import gzip
 import statistics
 
-assert(len(sys.argv) == 2)
-f = sys.argv[1]
+#assert(len(sys.argv) == 2)
+#f = sys.argv[1]
 
 def find_posdis(line):
 	pos5distance = int(line[6])-int(line[4])
@@ -69,7 +69,7 @@ def find_histstats(p5,p3,n5,n3):
 		
 	
 	
-	
+'''	
 if __name__ == '__main__':
 	p5 = [0,0,0,1,12,22,11]
 	p3 = [0,0,0,1,1,1,4,5]
@@ -77,13 +77,14 @@ if __name__ == '__main__':
 	n3 = [0,1,2,3]
 	print(find_histstats(p5,p3,n5,n3))
 	print(create_histograms(p5,p3,n5,n3))
+'''
 		
 	
 	
 	
 		
-p5,p3,n5,n3 = return_distances(f)
-histograms = create_histograms(p5,p3,n5,n3)
+#p5,p3,n5,n3 = return_distances(f)
+#histograms = create_histograms(p5,p3,n5,n3)
 '''
 for h in histograms:
 	print('distance','count',sep=', ')
@@ -92,7 +93,7 @@ for h in histograms:
 	#print(h)
 	#for i in range(len(h)):
 '''		
-print(find_histstats(p5,p3,n5,n3))		
+#print(find_histstats(p5,p3,n5,n3))		
 	
 
 	
