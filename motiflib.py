@@ -167,33 +167,81 @@ def memepwm(memeouttxt): #'meme_out/meme.txt'
 						l = line.split()
 						for n in range(len(nt)):
 							m[i][nt[n]] = float(l[n])
-					motifs.append(m)	
-					motif_stats.append((f'MEME-{nummot}',wid,nsites,e_val))	
+					motifs.append(m)
+					bits,p_bits = score_motifbit(m)	
+					motif_stats.append((f'MEME-{nummot}',wid,nsites,e_val,bits,p_bits))	
 					nummot += 1
 	return motifs, motif_stats
 
 #are variable names too specific?
 def read_testmotif(motif_file):
 	jpositions = []
-	seqnum = 0
-	numfsites = 0
+	numjsites = 0
+	#numfsites = 0
 	with open(motif_file) as tm:
 		for line in tm.readlines():
-			if line.startswith('>'): 
+			if line.startswith('>'):
+				positions = []
+				#numpos = 0 
 				line = line.split()
-				jposi = line[1].strip("['")
-				if len(line) == 3:
-					strand = line[2].strip("]'")
-					jposi = int(jposi)
-					numfsites += 1
-				else:
-					jposi = jposi.strip("]")
-					strand = ''
-				jpositions.append((f'seq-{seqnum}',jposi,strand, numfsites))
-				seqnum += 1
-	return jpositions
-	
-
+				#print(line)
+				numjsites += (int((len(line[1:(len(line))]))/2))
+				seq  = line[0].strip('>')
+				#jpositions.append(seq)
+				for i in range(1,len(line)):
+					#print(i)
+					#print(i,line)
+					#print('i',i,'len(line)',len(line))
+					#print(line[i])
+					if i == 1: 
+						if line[1] == '[]':
+							line[1] = line[1].strip("]")
+						positions.append(line[1].strip("['"))
+					#print(positions)
+					elif i == len(line)-1:
+						#print('yes!!!!!!!!!!!!!!!!!')
+						#print('i+1',i,'len line', len(line))
+						positions.append(line[i].strip("]'"))
+					else:
+						#jposi = int(jposi)
+						#print(positions
+						positions.append(line[i].strip("',"))
+						#print('strand',line[i+1].strip("',"))
+						#print('strand',line[i+1].strip("',"))
+					#strand = ''
+				#print(seq,positions)
+				jpositions.append((seq,positions))
+		#print(jpositions)
+		#print(numjsites)
+		#seqnum += 1
+		#print(positions)
+		#print(positions)
+		#jpositions.append(positions)
+	#print(len(jpositions))
+	#print(jpositions)
+	return jpositions #, numjsites
+	'''
+				for i in range(1,len(line),2):
+					print('i',i,'len(line)',len(line))
+					print(line[i])
+					if i == 1: #positions.append
+						print('first',line[1].strip("['"))
+					#print(positions)
+					elif i+1 == len(line)-1:
+						#print('yes!!!!!!!!!!!!!!!!!')
+						print('i+1',i,'len line', len(line))
+						#positions.append
+						print('last',line[i+1].strip("]'"))
+					#jposi = int(jposi)
+					#print(positions
+					print('pos',line[i].strip("',"))
+					print('strand',line[i+1].strip("',"))
+						#print('strand',line[i+1].strip("',"))
+					#strand = ''
+				#jpositions.append((f'seq-{seqnum}',jposi,strand))
+				#seqnum += 1
+	#return jpositions
+	'''
 	
 
 
@@ -251,27 +299,73 @@ def new_pwm(sites):
 	return newmot
 	
 #meme.txt files do not find false negatives 
+
 def pos_accuracy(mpos,jpos,mw,jw):
+	#print('jpos',jpos)
 	fp = 0
 	fl = 0
 	posdis = 0
+	#print('jpos',jpos)
+	#j = jpos[0]
+	#print(j)
 	if jpos == '':
+		#print('neg yeet')
 		fp += 1
 		fl += 1
 		posdis = 100
+		overlap = 0
+		overlap_p = 0
 	elif jpos != '':
+		#print('af yeet')
 		mpos = int(mpos)
 		jpos = int(jpos)
 		mend = mpos + mw
 		jend = jpos + jw
-		if mend >= jpos and mpos < jend :
+		if mpos >= jpos and mpos <= jend:
+			#print('mpos > jpos')
 			posdis = mpos-jpos
-		elif jend >= mpos and jpos < mend:
-			posdis = mpos-jpos
+			#print('posdis')
+			if mend >= jend:
+				overlap = jend - mpos
+				#overlap_p = overlap/jw
+			else:
+				overlap = mend - mpos
+			overlap_p = overlap/jw
+			#print(overlap, overlap*jw)
+			if overlap_p < 0.2:
+				#print('fail')
+				fp += 1
+				fl += 1		
+		elif mpos <= jpos and jpos <= mend:
+			#print('mpos<j')
+			posdis = jpos-mpos
+			#print('posdis')
+			if mend <= jend:
+				overlap = mend - jpos
+			else:
+				overlap = jend - jpos
+			overlap_p = overlap/jw
+			#print(overlap,overlap*jw)
+			if overlap_p < 0.2:
+				#print('fail')
+				fp += 1
+				fl += 1
 		else:
+			#print('immediate fail')
 			fl += 1	
 			posdis = 98
-	return fp, posdis, fl
+			overlap = 0
+			overlap_p = 0
+	#print('fp',fp)
+	#print('posdis',posdis)
+	#print('fl',fl)
+	#print('overlap',overlap*jw)
+	#print('p overlap',overlap)
+	return fp, posdis, fl, overlap, overlap_p
+
+
+
+
 
 '''	
 #uses manhattan distance (edit distance) to compare two pwms
@@ -450,7 +544,7 @@ if __name__ == '__main__':
 	print(score_motifbit(m2))
 	print(score_motifbit(m3))
 
-	'''
+	
 	m1 = []
 	m2 = [
 		{'A':0, 'C':0, 'G':0, 'T':1},
@@ -471,13 +565,13 @@ if __name__ == '__main__':
 	
 	#assert(local_motcompare(m1, m1) == 2) # maximum value or 1?
 	#assert(local_motcompare(m1, m2) == 0) # minimum valu
-	'''
+	
 	dl11 = local_motcompare(m2, m2)
 	dl12 = local_motcompare(m1, m1)
 	dl21 = local_motcompare(m2, m3)
 	dl22 = local_motcompare(m3, m3)
 	print(dl11, dl12, dl21, dl22)
-	'''
+	
 	dg11 = global_motcompare(m1, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
 	dg12 = global_motcompare(m1, m2, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
 	dg21 = global_motcompare(m2, m3, {'A': 0.25, 'C': 0.25, 'G':0.25, 'T':0.25})
@@ -488,7 +582,7 @@ if __name__ == '__main__':
 	print(dg21)
 	print(dg22)
 	print(dg33)
-	'''
+	
 	dl11 = compare_motifs(m1, m1)
 	dl12 = local_motcompare(m1, m2)
 	dl21 = local_motcompare(m2, m1)
@@ -497,10 +591,21 @@ if __name__ == '__main__':
 
 	site = []
 	'''
+	#mpos = 149
+	#mw = 50
+	#jpos = 120
+	#jw = 50
+	#fp, posdis, fl, overlap = (pos_accuracy(mpos,jpos,mw,jw))
+	#print('fp',fp)
+	#print('pd',posdis)
+	#print('fl',fl)
+	#print('ol',overlap)
 	
-
-		
-		
+	#print(pos_accuracy(mpos,jpos,mw,jw))
+	#print('1',read_testmotif('BS667tf1.fa'))
+	#print('2',read_testmotif('BS667tf2.fa'))
+	print(read_testmotif('BS667tf3.fa'))
+	
 		
 			
 		
