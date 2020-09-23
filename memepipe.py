@@ -5,6 +5,7 @@ import motiflib
 import argparse
 import math
 import statistics
+import memepipelib
 
 # setup
 parser = argparse.ArgumentParser(
@@ -35,7 +36,7 @@ parser.add_argument('--nummotifs', required=False, type=int, default=1,
 	metavar='<int>', help='number of motifs for meme to find [%(default)i]')
 parser.add_argument('--maxmarkov', required=False, type=int, default=1,
 	metavar='<int>', help='highest markov order [%(default)i]')
-parser.add_argument('--numiterations', required=False, type=int, default=5,
+parser.add_argument('--numiterations', required=False, type=int, default=1,
 	metavar='<int>', help='iterations for condensed data [%(default)i]')
 parser.add_argument('--motiffrequency', required=False, type=float, 
 	default=0.9, metavar='<float>', help='background probability of A \
@@ -68,6 +69,7 @@ assert(arg.motiffrequency <= 1)
 model = ['zoops','oops','anr']
 background = {'A':arg.PA,'C':arg.PC,'G':arg.PG,'T':arg.PT}
 freq = arg.motiffrequency
+iterations = arg.numiterations
 
 
 def convert_argtovar(minprom, maxprom, promstep, minseq,maxseq,seqstep,\
@@ -85,10 +87,12 @@ maxmarkov):
 		markov_order.append(i)	
 	return promoter, num_seq, markov_order
 
+
 promoter,numseq,markov_order = convert_argtovar(arg.minpromoterlength,\
 arg.maxpromoterlength,arg.promoterlengthstep,arg.minnumseq,arg.maxnumseq,\
 arg.numseqstep,arg.maxmarkov)
 
+'''
 def generate_promoter(jasparfile, p, n, freq, background):
 	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}.fa' 
 	cmd = f'python3 motifapalooza.py --jasparfile {arg.jasparfile} \
@@ -122,6 +126,7 @@ def performance(motif,motifs,background):
 
 	
 #memeinfo is a single line of the meme.txt file
+
 def get_memedata(meme_info, j_info, distance_scores, motif_info,jpwm,p,n,m,o):
 	result = []
 	fp = 0
@@ -138,7 +143,7 @@ def get_memedata(meme_info, j_info, distance_scores, motif_info,jpwm,p,n,m,o):
 			if seq == j_info[j][0]:
 				j_pos = j_info[j][1]
 				j_strand = j_info[j][2]
-				numjsites = j_info[j][3]
+				#numjsites = j_info[j][3]
 				break
 		for j in range(len(motif_info)):
 			if motif == motif_info[j][0]:
@@ -155,8 +160,9 @@ def get_memedata(meme_info, j_info, distance_scores, motif_info,jpwm,p,n,m,o):
 		result.append((seq,motif,nsites,m_strand,j_strand,p_val,meme_eval,\
 		score,p_score,posdis, fpos, 0,fl,p,n,m,o))
 	return result,fp,fn,fail_c
+'''
 
-
+'''
 def find_falsenegs(fn,j_info):
 	false_negs = []
 	for i in range(len(j_info)):
@@ -196,9 +202,9 @@ def get_sequenceinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm):
 	j_info = motiflib.read_testmotif(promoter_file)
 	motifs, meme_info, motif_info = run_meme(promoter_file,m,o,nummotifs)
 	scores = performance(jpwm,motifs,background)
-	results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,motif_info,\
+	results, fp, fn, fail_c = memepipe.get_memedata(meme_info,j_info,scores,motif_info,\
 	jpwm,p,n,m,o)
-	false_negs = find_falsenegs(fn,j_info)
+	false_negs = memepipelib.find_falsenegs(fn,j_info)
 	for i in range(len(results)):
 		seqinfo.append((results[i]))
 	for i in range(len(false_negs)):
@@ -215,9 +221,9 @@ def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,\
 		j_info = motiflib.read_testmotif(promoter_file)
 		motifs, meme_info, motif_info = run_meme(promoter_file,m,o,nummotifs)
 		scores = performance(jpwm,motifs,background)
-		results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,\
+		results, fp, fn, fail_c = memepipe.get_memedata(meme_info,j_info,scores,\
 		motif_info,jpwm,p,n,m,o)
-		present = present_info(promoter_file,results,bits,p_bits,scores,\
+		present = memepipelib.present_info(promoter_file,results,bits,p_bits,scores,\
 		fp,fn,fail_c,j_info,motif_info,p,n,m,o)
 		result.append(present)
 	if len(result) > 1:
@@ -252,7 +258,7 @@ def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,\
 	else:
 		return result
 
-		
+'''		
 
 
 
@@ -262,7 +268,8 @@ def get_motifinfo(jasparfile,p,n,freq,background,m,o,nummotifs,jpwm,\
 
 #python tmp file import 
 #ask in command line what they want to name it 
-
+#(seq,motif,nsites,m_strand,j_strand,overlap,overlap_p,p_val,meme_eval,\
+#		score,p_score,posdis, fpos, 0,fl,p,n,m,o)
 
 if arg.condenseddata:
 	print('promoter_file','motif','number_of_sites','jaspar_file_info',\
@@ -273,41 +280,75 @@ if arg.condenseddata:
 	'stdev(avg_frate)','stdev(avg_srate)','stdev(avg_fprate)','stdev(avg_fn)'\
 	,sep=', ')
 else:
-	print('sequence','motif','number_of_sites','m_strand', 'j_strand', 'p_val'\
-	, 'meme_e_value','score', 'score_percentage','position_distance', \
-	'false_positive','false_negative','fail','promoter_length', 'number of \
-	sequences', 'model', 'markov_order',sep=', ')
+	#seq, motif,nsites,m_pos, m_strand,meme_wid,j_pos,j_strand,len(jpwm),p_val,score,p_score,meme_eval,fpos,0,posdis,fl,overlap,overlap_p,p,n,m,o
+	print('sequence','motif','number_of_sites','memem position', 'meme strand','meme width','j position','j_strand','j width','p value','score','score percentage','e value','false pos','false neg','positional distance','fail','overlap','overlap percentage', 'promoter length'\
+	'number of sequences', 'model', 'markov_order',sep=', ')
 jpwm = motiflib.read_JASPAR(arg.jasparfile)
 bits, p_bits = motiflib.score_motifbit(jpwm)
 for p in promoter:
 	for n in numseq:
-		#promoter_file = generate_promoter(arg.jasparfile,p,n,freq,background)
-		#j_info = motiflib.read_testmotif(promoter_file)
 		for m in model:
 			for o in markov_order:
-				#motifs, meme_info, motif_info = run_meme(promoter_file,m,o,\
-				#arg.nummotifs)
-				#scores = performance(jpwm,motifs,background)
-				#results, fp, fn, fail_c = get_memedata(meme_info,j_info,scores,\
-				#motif_info,jpwm,p,n,m,o)
-				if not arg.condenseddata:
-					#present = present_info(promoter_file, results,bits,p_bits,\
-					#scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o)
-					present = get_sequenceinfo(arg.jasparfile,p,n,freq,\
-					background,m,o,arg.nummotifs,jpwm)
-				else:
-					#present = present_info(results,bits,p_bits, scores, fp,fn\
-					#,fail_c,j_info,motif_info,p,n,m,o)
-					present = get_motifinfo(arg.jasparfile,p,n,freq,background\
-					,m,o,arg.nummotifs,jpwm,arg.numiterations)
-				for i in range(len(present)):
-					row = str(present[i])[1:-1]
-					print(row)
-				if not arg.condenseddata:
-					print('end')
+				for r in range(iterations):
+					print('	ALL INFO !!!!!!!!!!!!!!!!')
+					print('r',r)
+					promoter_file = memepipelib.generate_promoter_bg(arg.jasparfile,p,n,freq,background,arg.numiterations,arg.condenseddata)
+					print('file',promoter_file)
+					print('')
+					j_info = motiflib.read_testmotif(promoter_file)
+					print('j info',j_info)
+					print('')
+					motifs, meme_info, motif_info = memepipelib.run_meme(arg.memepath,promoter_file,m,o,arg.nummotifs,background)
+					print('motifs',motifs)
+					print('')
+					print('meme info',meme_info)
+					print('')
+					print('motif info',motif_info)
+					print('')
+					scores = memepipelib.performance_bg(jpwm,motifs,background)
+					print(scores)
+					print('')
+					results, fn = memepipelib.get_memedata(promoter_file,meme_info,j_info,scores,motif_info,\
+					jpwm,p,n,m,o)
+					print('results',results)
+					print('')
+					print('fn',fn)
+					print('')
+					false_neg = memepipelib.find_falsenegs(fn, j_info,p,n,m,o,promoter_file)
+					print('false neg', false_neg)
+					#print(memepipelib.get_memedata())
+					if not arg.condenseddata:
+						for i in range(len(results)):
+							print(results[i])
+						for i in range(len(false_neg)):
+							print(false_neg[i])
+						#present = memepipelib.present_info(promoter_file, results,bits,p_bits,\
+						#scores, fp,fn,fail_c,j_info,motif_info,p,n,m,o,arg.condenseddata)
+						#present = memepipelib.get_sequenceinfo_bg(arg.memepath,arg.jasparfile,p,n,freq,\
+						#background,m,o,arg.nummotifs,jpwm,arg.numiterations,arg.condenseddata)
+					else:
+						#present = memepipelib.present_info(promoter_file,results,bits,p_bits, scores, fp,fn\
+						#,fail_c,j_info,motif_info,p,n,m,o,arg.condenseddata)
+						#result = memepipelib.get_variables_bg(arg.memepath,arg.jasparfile,p,n,freq,background,m,o,arg.nummotifs,jpwm,arg.numiterations,arg.condenseddata,arg.bothstrands,bits,p_bits)
+						#present = memepipelib.get_motifinfo_bg(arg.memepath,arg.jasparfile,p,n,freq,background\
+						#,m,o,arg.nummotifs,jpwm,arg.numiterations,arg.bothstrands,bits,p_bits,arg.condenseddata)
+						final = memepipelib.find_condensedstats(results,fn,motif_info,j_info,promoter_file,bits,p_bits,p,n,m,o)	
+						for i in range(len(final)):
+							print(final[i],sep=',')
+					'''
+					for i in range(len(present)):
+						row = str(present[i])[1:-1]
+						print(row)
+					if not arg.condenseddata:
+						print('end')
+					'''
 				
-			
 				
+				
+#	promoter_file,results, bits,p_bits,scores, fp,fn,fail_c,\
+#	j_info,motif_info,p,n,m,o,condenseddata		
+				
+
 
 	
 
