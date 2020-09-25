@@ -219,7 +219,7 @@ def read_testmotif(motif_file):
 		#jpositions.append(positions)
 	#print(len(jpositions))
 	#print(jpositions)
-	return jpositions #, numjsites
+	return jpositions, numjsites
 	'''
 				for i in range(1,len(line),2):
 					print('i',i,'len(line)',len(line))
@@ -301,66 +301,45 @@ def new_pwm(sites):
 #meme.txt files do not find false negatives 
 
 def pos_accuracy(mpos,jpos,mw,jw):
-	#print('jpos',jpos)
 	fp = 0
 	fl = 0
 	posdis = 0
-	#print('jpos',jpos)
-	#j = jpos[0]
-	#print(j)
 	if jpos == '':
-		#print('neg yeet')
 		fp += 1
 		fl += 1
 		posdis = 100
 		overlap = 0
 		overlap_p = 0
 	elif jpos != '':
-		#print('af yeet')
 		mpos = int(mpos)
 		jpos = int(jpos)
 		mend = mpos + mw
 		jend = jpos + jw
 		if mpos >= jpos and mpos <= jend:
-			#print('mpos > jpos')
 			posdis = mpos-jpos
-			#print('posdis')
 			if mend >= jend:
 				overlap = jend - mpos
-				#overlap_p = overlap/jw
 			else:
 				overlap = mend - mpos
 			overlap_p = overlap/jw
-			#print(overlap, overlap*jw)
 			if overlap_p < 0.2:
-				#print('fail')
 				fp += 1
 				fl += 1		
 		elif mpos <= jpos and jpos <= mend:
-			#print('mpos<j')
 			posdis = jpos-mpos
-			#print('posdis')
 			if mend <= jend:
 				overlap = mend - jpos
 			else:
 				overlap = jend - jpos
 			overlap_p = overlap/jw
-			#print(overlap,overlap*jw)
 			if overlap_p < 0.2:
-				#print('fail')
 				fp += 1
 				fl += 1
 		else:
-			#print('immediate fail')
 			fl += 1	
 			posdis = 98
 			overlap = 0
 			overlap_p = 0
-	#print('fp',fp)
-	#print('posdis',posdis)
-	#print('fl',fl)
-	#print('overlap',overlap*jw)
-	#print('p overlap',overlap)
 	return fp, posdis, fl, overlap, overlap_p
 
 
@@ -604,7 +583,7 @@ if __name__ == '__main__':
 	#print(pos_accuracy(mpos,jpos,mw,jw))
 	#print('1',read_testmotif('BS667tf1.fa'))
 	#print('2',read_testmotif('BS667tf2.fa'))
-	print(read_testmotif('BS667tf3.fa'))
+	print(read_testmotif('667_25.fa'))
 	
 		
 			
