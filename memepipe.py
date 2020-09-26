@@ -55,6 +55,8 @@ parser.add_argument('--negstrands', action='store_true',
 	help='on/off switch')
 parser.add_argument('--condenseddata', action='store_true',
 	help='on/off switch')
+parser.add_argument('--localmotifscore', action='store_true',
+	help='on/off switch')
 # finalization
 arg = parser.parse_args()
 
@@ -317,7 +319,14 @@ for p in promoter:
 					#print('')
 					#print('motif info',motif_info)
 					#print('')
-					scores = memepipelib.performance_bg(jpwm,motifs,background)
+					if arg.localmotifscore:
+						#background = memepipelib.calcbg_fromdatafile(dnafile)
+						scores = memepipelib.performance_mo(jpwm,motifs)
+						#print('global scores',scores)
+					else:
+						scores = memepipelib.performance_bg(jpwm,motifs,background)
+						#print('local scores',scores)
+					#scores = memepipelib.performance_bg(jpwm,motifs,background)
 					#print(scores)
 					#print('')
 					results, fn = memepipelib.get_memedata(promoter_file,\

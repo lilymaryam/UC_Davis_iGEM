@@ -210,7 +210,7 @@ p,n,m,o,false_neg,numjsites,iteration):
 				#print(result[j][1], motif_info[i][0],result[j][16],\
 				#result[j][13])
 				nsites = int(result[j][3])
-				#print('nsites',nsites)
+				print('nsites',nsites)
 				fl_ct += (result[j][17])
 				#print('fl_ct',fl_ct)
 				fp_ct += (result[j][14])
@@ -234,16 +234,16 @@ p,n,m,o,false_neg,numjsites,iteration):
 		#print('evals', evalue)
 		#print('ovl_sum',ovl_sum)
 		#print('ovlp_sum',ovlp_sum)
-		condensed_stats.append((promoter_file,motif_info[i][0],bits,p_bits,\
-		evalue,score,score_p, nsites,fl_ct/nsites,(nsites-fl_ct)/nsites,\
+		condensed_stats.append((promoter_file,motif_info[i][0],nsites,bits,p_bits,\
+		evalue,score,score_p,fl_ct/nsites,(nsites-fl_ct)/nsites,\
 		fp_ct/nsites,len(false_neg)/numjsites,p,n,m,o,iteration))
 	#print('file','motif','info','p_info','evalue','score','p score','nsites'\
 	#,'failrate','suces rate','false p rate')
 	#for i in range(len(condensed_stats)):
 	#	print('condensed_stats',i, condensed_stats[i])
-	#print('file','motif','info','p_info','evalue','score','p score','nsites',\
-	#'failrate','suces rate','false p rate')
-	#print('consensed_stats',condensed_stats)
+	#print('file','motif','nsites','info','p_info','evalue','score','p score',\
+	#'failrate','suces rate','false p rate','false n rate','p','n','m','o','iteration')
+	print('consensed_stats',condensed_stats)
 	return condensed_stats	
 
 
@@ -497,18 +497,20 @@ def avg_condensedstats(final,motif_info,p,n,m,o,r):
 					#print('MOT', mot,'result mot',result[i][j][1])
 					if  mot == final[j][k][1]:
 						#print('MOT', mot,'final mot',final[j][k][1])
-						avg_nsites.append(final[j][k][7])
-						avg_eval.append(final[j][k][4])
-						avg_score.append(final[j][k][5])
-						avg_pscore.append(final[j][k][6])
+						avg_nsites.append(final[j][k][2])
+						avg_eval.append(final[j][k][5])
+						avg_score.append(final[j][k][6])
+						avg_pscore.append(final[j][k][7])
 						avg_frate.append(final[j][k][8])
 						avg_srate.append(final[j][k][9])
 						avg_fprate.append(final[j][k][10])
 						avg_fnrate.append(final[j][k][11])
 						#avg_fn.append(result[j][k][11])	
+			#'file','motif','nsites','info','p_info','evalue','score','p score',\
+			#'failrate','suces rate','false p rate','false n rate','p','n','m','o','iteration'
 			#print('FIND INFO HERE!!!!!!!!!!!!!!!!!!!')
 			#print(mot)
-			#print('avg_nsites',avg_nsites)
+			print('avg_nsites',avg_nsites)
 			#print('avg_eval',avg_eval)
 			#print('avg_score',avg_score)
 			#print('avg_pscore', avg_pscore)
