@@ -51,9 +51,26 @@ def get_seq(abbr, scaff):
 	print('whoops')
 	sys.exit(1)
 
+def get_protein(abbr, id):
+	file = f'PFASTA/{abbr}.fa'
+	search = f'>{id}'
+	with open(file) as fp:
+		while True:
+			line = fp.readline()
+			if line.startswith(search):
+				seqs = []
+				while True:
+					line = fp.readline()
+					if line.startswith('>'): break
+					if line == '': break
+					seqs.append(line.rstrip())
+				return ''.join(seqs)
+	print('whoops')
+	sys.exit(1)
 
 
-parser = argparse.ArgumentParser(description='JGI promoter processing')
+
+parser = argparse.ArgumentParser(description='JGI promoter/protein processing')
 parser.add_argument('--min_genes', type=int, default=4,
 	metavar='<int>', help='minimum genes per cluster [%(default)i]')
 parser.add_argument('--upstream', type=int, default=1000,
@@ -83,6 +100,7 @@ with open('public_species.txt') as fp:
 	for line in fp.readlines():
 		abbr, genus, species = line.split('\t')
 		pathlib.Path(f'Promoters/{abbr}').mkdir(parents=True, exist_ok=True)
+		pathlib.Path(f'Proteins/{abbr}').mkdir(parents=True, exist_ok=True)
 		
 		clusters = get_clusters(abbr)
 		for cid in clusters:
@@ -104,6 +122,13 @@ with open('public_species.txt') as fp:
 					
 					fp.write(f'>{abbr}:{cid}:{gid} {arg.upstream} {strand}\n')
 					fp.write(f'{seq[c1:c2]}\n')
+			
+			with open(f'Proteins/{abbr}/{cid}.fa', 'w') as fp:
+				for gid in clusters[cid]['genes']:
+					seq = get_protein(abbr, gid)
+					fp.write(f'>{abbr}:{cid}:{gid}\n')
+					fp.write(f'{seq}\n')
+			
 			
 			size = clusters[cid]['size']
 			desc = clusters[cid]['desc']
