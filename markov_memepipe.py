@@ -45,8 +45,8 @@ parser.add_argument('--motiffrequency', required=False, type=float,
 	[%(default).3f]')
 parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
-parser.add_argument('--negstrands', action='store_true',
-	help='on/off switch')
+#parser.add_argument('--negstrands', action='store_true',
+#	help='on/off switch')
 parser.add_argument('--condenseddata', action='store_true',
 	help='on/off switch')
 parser.add_argument('--globalmotifscore', action='store_true',
@@ -83,7 +83,7 @@ promoter,numseq = memepipelib.convert_argtovar(arg.minpromoterlength,\
 arg.maxpromoterlength,arg.promoterlengthstep,arg.minnumseq,arg.maxnumseq,\
 arg.numseqstep)
 
-o = arg.markov_order
+#o = arg.markov_order
 
 '''
 def generate_promoter_mo(jasparfile, p, n, freq): 
@@ -304,12 +304,12 @@ for p in promoter:
 				#print('')
 				#figure out what global score needs
 				if arg.globalmotifscore:
-					background = memepipelib.calcbg_fromdatafile(dnafile)
+					background = memepipelib.calcbg_frompromfile(promoter_file)
 					scores = memepipelib.performance_bg(jpwm,motifs,background)
-					print('global scores',scores)
+					#print('global scores',scores)
 				else:
 					scores = memepipelib.performance_mo(jpwm,motifs)
-					print('local scores',scores)
+					#print('local scores',scores)
 				#print(scores)
 				#print('')
 				results, fn = memepipelib.get_memedata(promoter_file,meme_info,j_info,scores,motif_info,\
