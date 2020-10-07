@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(
 	description='Embeds instances of a motif into random sequences',
 	epilog=extended_help)
 parser.add_argument('--jasparfile', required=True, type=str,
-	metavar='<str>', help='jaspar file')
+	metavar='<str>', help='directory path to jaspar file')
 parser.add_argument('--numseq', required=False, type=int, default=10,
 	metavar='<int>', help='number of sequences to generate [%(default)i]')
 parser.add_argument('--seqlen', required=False, type=int, default=100,
@@ -46,6 +46,8 @@ arg = parser.parse_args()
 
 assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
 assert(arg.freq <= 1.0)
+if arg.bothstrands and arg.negstrands:
+	raise ValueError('Strandedness cannot be both and negative together')
 
 def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	seq = []
@@ -59,6 +61,7 @@ def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 
 
 motif = motiflib.read_JASPAR(arg.jasparfile)
+assert(len(motif) <= arg.seqlen)
 for i in range(0, arg.numseq):
 	seq = (generate_seq(arg.numseq, arg.seqlen, arg.PA, arg.PC, arg.PG, arg.PT))
 	r = random.random()

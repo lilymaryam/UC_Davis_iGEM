@@ -64,7 +64,8 @@ arg = parser.parse_args()
 #change to use math.isclose
 assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
 #assert(arg.maxmarkov <= 4)
-assert(arg.motiffrequency <= 1)
+assert(arg.motiffrequency <= 1.0)
+#asser(arg.mps)
 
 
 
@@ -73,7 +74,7 @@ background = {'A':arg.PA,'C':arg.PC,'G':arg.PG,'T':arg.PT}
 freq = arg.motiffrequency
 iterations = arg.numiterations
 
-
+'''
 def convert_argtovar(minprom, maxprom, promstep, minseq,maxseq,seqstep):#,\
 #max_markov):
 	promoter = []
@@ -88,21 +89,20 @@ def convert_argtovar(minprom, maxprom, promstep, minseq,maxseq,seqstep):#,\
 	#for i in range(maxmarkov+1):
 	#	markov_order.append(i)	
 	return promoter, num_seq#, markov_order
+	
+'''
 
 
-promoter,numseq = convert_argtovar(arg.minpromoterlength,\
+promoter,numseq = memepipelib.convert_argtovar(arg.minpromoterlength,\
 arg.maxpromoterlength,arg.promoterlengthstep,arg.minnumseq,arg.maxnumseq,\
-arg.numseqstep)#,arg.maxmarkov)
-
-print('promoter',promoter)
-print('numseq',numseq)
+arg.numseqstep)
 o = 0
-print('o',o)
+
 
 '''
 def generate_promoter(jasparfile, p, n, freq, background):
 	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}.fa' 
-	cmd = f'python3 motifapalooza.py --jasparfile {arg.jasparfile} \
+	cmd = f'python3 Mbed.py --jasparfile {arg.jasparfile} \
 	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
 	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
 	--bothstrands > {tmpfile} '

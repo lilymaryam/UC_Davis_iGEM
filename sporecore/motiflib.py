@@ -48,7 +48,8 @@ def read_memetxt(memetxt):
 '''
 
 def read_memetxt(memetxt):
-	'''Opens text file output of meme and extracts the sites discovered by meme'''
+	'''Opens text file output of meme and extracts the sites discovered by 
+	meme'''
 	sites = []
 	motif_stats = []
 	with open(memetxt) as mt:

@@ -46,6 +46,8 @@ arg = parser.parse_args()
 	
 
 assert(arg.freq <= 1.0)
+if arg.bothstrands and arg.negstrands:
+	raise ValueError('Strandedness cannot be both and negative together')
 
 
 def generate_markovseq(numseq,seqlen,data_file,k):
@@ -61,6 +63,7 @@ def generate_markovseq(numseq,seqlen,data_file,k):
 
 
 motif = motiflib.read_JASPAR(arg.jasparfile)
+assert(len(motif) <= arg.seqlen)
 for i in range(0, arg.numseq):
 	seq = (generate_markovseq(arg.numseq,arg.seqlen,arg.dnafile,\
 	arg.markov_order))

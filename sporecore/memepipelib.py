@@ -24,7 +24,7 @@ def generate_promoter_mo(dnafile, jasparfile, p, n, o, freq,i):
 	Background sequence is generated using markov models of DNA sequence from a
 	fasta file input'''
 	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}_{i}.fa' 
-	cmd = f'python3 markov_motifapalooza.py --jasparfile {jasparfile} \
+	cmd = f'python3 markov_Mbed.py --jasparfile {jasparfile} \
 	--dnafile {dnafile} --markov_order {o} --numseq {n} --seqlen {p} --freq \
 	{freq} --bothstrands > {tmpfile} '
 	os.system(cmd)
@@ -35,7 +35,7 @@ def generate_promoter_bg(jasparfile, p, n, freq, background,i,condenseddata):
 	Background sequence is generated using a nucleotide distribution frequency
 	input from the command line.'''
 	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}_{i}.fa' 
-	cmd = f'python3 motifapalooza.py --jasparfile {jasparfile} \
+	cmd = f'python3 Mbed.py --jasparfile {jasparfile} \
 	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
 	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
 	--bothstrands > {tmpfile} '
@@ -85,7 +85,12 @@ def calcbg_frompromfile(promoterfile):
 					#if line[i] == 'C': print(line[i])
 					#if line[i] == 'G': print(line[i])
 					#if line[i] == 'T': print(line[i])
+	print(A)
+	print(C)
+	print(G)
+	print(T)
 	total = A+C+G+T
+	print(total)
 	A = A/total
 	C = C/total
 	G = G/total

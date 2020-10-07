@@ -4,7 +4,9 @@ import argparse
 import random 
 
 
+#fix this
 def organize_dna(dnafile):
+	'''Extracts DNA sequence from fasta format and returns an extended string of DNA for markov analysis  '''
 	dna = ''
 	with open(dnafile) as df:
 		for line in df.readlines():
@@ -24,6 +26,7 @@ def make_kmerdict(k, dna):
 		if nt not in kmers[ctx]:
 			kmers[ctx][nt] = 0 
 		kmers[ctx][nt] += 1
+	#print(kmers)
 	if len(kmers) < 4**k:
 		raise ValueError('Not enough DNA sequence for markov order')
 	else:
