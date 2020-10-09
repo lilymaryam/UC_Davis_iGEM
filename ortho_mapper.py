@@ -3,10 +3,6 @@ import os
 import sys
 import math
 
-def poisson(n, k):
-	return n**k * math.e ** -n / math.gamma(k+1)
-	
-
 def ortholog(file, parent):
 	match = {}
 	with open(file) as fp:
@@ -21,7 +17,6 @@ def ortholog(file, parent):
 			if p2 not in parent: continue
 			
 			c2 = parent[p2]
-			#print(s1, c1, p1, p2, s2, c2, score)
 			if c2 not in match: match[c2] = {}
 			if p1 not in match[c2]: match[c2][p1] = score
 	
@@ -29,7 +24,6 @@ def ortholog(file, parent):
 		stuff = []
 		for p1 in match[c2]:
 			stuff.append(match[c2][p1])
-	#	print(c2, p1, stuff)
 		
 	# assign matching cluster based on max count then max score
 	max_count = 0
@@ -54,7 +48,7 @@ def ortholog(file, parent):
 def score(n, k):
 	if k > n: k = n
 	if n == 0: return 0
-	return (k / n) / poisson(n, n)
+	return (k / n) * math.log2(n)
 
 data = None
 with open('clusters.json') as fp:
@@ -75,8 +69,6 @@ for s1 in data['species']:
 				else: l2 = len(data['clusters'][c2])
 				
 				s = score(l1, k) + score(l2, k)
-				
-				
 				fp.write(f'{s1}:{c1} {s2}:{c2} {k} {l1} {l2} {s:.3f}\n')
 
 
