@@ -11,23 +11,23 @@
         "release": "Wed Jan 29 15:00:42 2020 -0800",
         "stop_reason": "Stopped because requested number of motifs (1) found.",
         "cmd": [
-          "meme", "/tmp/testmotif20975_208_15_1.fa", "-dna", "-markov_order",
-          "0", "-mod", "oops", "-nmotifs", "1", "-revcomp"
+          "meme", "/tmp/testmotif79509_100_20_1.fa", "-dna", "-markov_order",
+          "0", "-mod", "zoops", "-nmotifs", "1", "-revcomp"
         ],
         "options": {
-          "mod": "oops",
+          "mod": "zoops",
           "revcomp": true,
           "nmotifs": 1,
           "objfun": "E-value of product of p-values",
           "spfun": "E-value of product of p-values",
           "minw": 8,
           "maxw": 50,
-          "minsites": 15,
-          "maxsites": 15,
+          "minsites": 2,
+          "maxsites": 20,
           "wnsites": 0.8,
           "spmap": "uni",
           "spfuzz": 0.5,
-          "searchsize": 3120,
+          "searchsize": 2000,
           "maxsize": 0,
           "norand": "no",
           "csites": 1000,
@@ -120,76 +120,96 @@
         "background": {
           "source": "--sequences--",
           "order": 0,
-          "freqs": [0.244, 0.256, 0.256, 0.244]
+          "freqs": [0.295, 0.205, 0.205, 0.295]
         },
         "sequence_db": {
-          "primary_source": "/tmp/testmotif20975_208_15_1.fa",
-          "primary_count": 15,
-          "primary_positions": 3120,
+          "primary_source": "/tmp/testmotif79509_100_20_1.fa",
+          "primary_count": 20,
+          "primary_positions": 2000,
           "control_source": "--none--",
           "control_count": 0,
           "control_positions": 0,
-          "freqs": [0.244, 0.256, 0.256, 0.244],
+          "freqs": [0.295, 0.205, 0.205, 0.295],
           "sequences": [
             {
               "name": "seq-0",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-1",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-2",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-3",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-4",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-5",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-6",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-7",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-8",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-9",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-10",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-11",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-12",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-13",
-              "length": 208,
+              "length": 100,
               "weight": 1.000000
             }, {
               "name": "seq-14",
-              "length": 208,
+              "length": 100,
+              "weight": 1.000000
+            }, {
+              "name": "seq-15",
+              "length": 100,
+              "weight": 1.000000
+            }, {
+              "name": "seq-16",
+              "length": 100,
+              "weight": 1.000000
+            }, {
+              "name": "seq-17",
+              "length": 100,
+              "weight": 1.000000
+            }, {
+              "name": "seq-18",
+              "length": 100,
+              "weight": 1.000000
+            }, {
+              "name": "seq-19",
+              "length": 100,
               "weight": 1.000000
             }
           ]
@@ -200,283 +220,361 @@
             "id": "GAGGTMAAT",
             "alt": "MEME-1",
             "len": 9,
-            "nsites": 15,
-            "evalue": "2.0e+000",
-            "ic": 12.3,
-            "re": 12.3,
-            "llr": 128,
-            "bt": 7.63662,
-            "time": 0.393374,
+            "nsites": 20,
+            "evalue": "1.3e-015",
+            "ic": 13.0,
+            "re": 12.9,
+            "llr": 178,
+            "bt": 7.99184,
+            "time": 0.379593,
             "psm": [
-              [-187, -194, 176, -1055], [183, -1055, -94, -1055], 
-              [-187, -94, 164, -1055], [-1055, -1055, 197, -1055], 
-              [-1055, -1055, -1055, 203], [113, 87, -1055, -1055], 
-              [159, 6, -1055, -1055], [193, -194, -1055, -1055], 
-              [-1055, -36, -36, 130]
+              [-1097, -1097, 228, -1097], [169, -1097, -204, -1097], 
+              [-256, -204, 213, -1097], [-256, -1097, 221, -1097], 
+              [-1097, -1097, -204, 169], [103, 55, -1097, -156], 
+              [135, -104, -45, -1097], [161, -104, -1097, -1097], 
+              [-1097, -104, -204, 153]
             ],
             "pwm": [
-              [0.066667, 0.066667, 0.866667, 0.000000], 
-              [0.866667, 0.000000, 0.133333, 0.000000], 
-              [0.066667, 0.133333, 0.800000, 0.000000], 
               [0.000000, 0.000000, 1.000000, 0.000000], 
-              [0.000000, 0.000000, 0.000000, 1.000000], 
-              [0.533333, 0.466667, 0.000000, 0.000000], 
-              [0.733333, 0.266667, 0.000000, 0.000000], 
-              [0.933333, 0.066667, 0.000000, 0.000000], 
-              [0.000000, 0.200000, 0.200000, 0.600000]
+              [0.950000, 0.000000, 0.050000, 0.000000], 
+              [0.050000, 0.050000, 0.900000, 0.000000], 
+              [0.050000, 0.000000, 0.950000, 0.000000], 
+              [0.000000, 0.000000, 0.050000, 0.950000], 
+              [0.600000, 0.300000, 0.000000, 0.100000], 
+              [0.750000, 0.100000, 0.150000, 0.000000], 
+              [0.900000, 0.100000, 0.000000, 0.000000], 
+              [0.000000, 0.100000, 0.050000, 0.850000]
             ],
             "sites": [
               {
-                "seq": 0,
-                "pos": 1,
-                "rc": true,
-                "pvalue": 3.54e-06,
-                "lflank": "ACCCCGCGGT",
+                "seq": 17,
+                "pos": 38,
+                "rc": false,
+                "pvalue": 5.68e-06,
+                "lflank": "gtttaacgat",
                 "match": "GAGGTAAAT",
-                "rflank": "A"
+                "rflank": "gggcatcatg"
               }, {
-                "seq": 4,
-                "pos": 86,
-                "rc": true,
-                "pvalue": 7.26e-06,
-                "lflank": "AGGAGATGGT",
-                "match": "GAGGTCAAT",
-                "rflank": "GTCGTCCGCG"
+                "seq": 16,
+                "pos": 37,
+                "rc": false,
+                "pvalue": 5.68e-06,
+                "lflank": "ctagactgct",
+                "match": "GAGGTAAAT",
+                "rflank": "gggtgactaa"
               }, {
                 "seq": 13,
-                "pos": 91,
+                "pos": 55,
                 "rc": true,
-                "pvalue": 1.84e-05,
-                "lflank": "GGCCCAAACA",
-                "match": "GAGGTAAAC",
-                "rflank": "CGCAATCTCA"
+                "pvalue": 5.68e-06,
+                "lflank": "ATTGTGACCC",
+                "match": "GAGGTAAAT",
+                "rflank": "GCGGATACGT"
               }, {
                 "seq": 10,
-                "pos": 137,
+                "pos": 40,
                 "rc": true,
-                "pvalue": 1.84e-05,
-                "lflank": "AGAGCCGCTT",
-                "match": "GAGGTAAAG",
-                "rflank": "CTGAGTATCG"
-              }, {
-                "seq": 6,
-                "pos": 89,
-                "rc": false,
-                "pvalue": 1.84e-05,
-                "lflank": "ctaggattta",
-                "match": "GAGGTACAT",
-                "rflank": "acagagagtc"
-              }, {
-                "seq": 5,
-                "pos": 127,
-                "rc": true,
-                "pvalue": 1.84e-05,
-                "lflank": "CATCTGGACG",
-                "match": "GAGGTAAAC",
-                "rflank": "AGCGTCATTA"
-              }, {
-                "seq": 12,
-                "pos": 109,
-                "rc": false,
-                "pvalue": 3.01e-05,
-                "lflank": "cgttcggggc",
-                "match": "GAGGTCCAT",
-                "rflank": "gtcgagagag"
-              }, {
-                "seq": 1,
-                "pos": 69,
-                "rc": false,
-                "pvalue": 3.01e-05,
-                "lflank": "agaagattcg",
-                "match": "GAGGTCCAT",
-                "rflank": "cacccacaca"
-              }, {
-                "seq": 11,
-                "pos": 77,
-                "rc": true,
-                "pvalue": 4.50e-05,
-                "lflank": "CATTAACCTT",
-                "match": "GGGGTCAAT",
-                "rflank": "TCTGAATCCT"
-              }, {
-                "seq": 7,
-                "pos": 65,
-                "rc": true,
-                "pvalue": 6.43e-05,
-                "lflank": "GCGGACGGTA",
-                "match": "GAAGTAAAT",
-                "rflank": "TAGTGTTGTT"
-              }, {
-                "seq": 2,
-                "pos": 128,
-                "rc": true,
-                "pvalue": 8.57e-05,
-                "lflank": "CATAGGCACA",
-                "match": "CAGGTCAAT",
-                "rflank": "AGACATACGT"
+                "pvalue": 5.68e-06,
+                "lflank": "TGAACGCTTT",
+                "match": "GAGGTAAAT",
+                "rflank": "GATTGTGTGT"
               }, {
                 "seq": 9,
-                "pos": 186,
+                "pos": 12,
                 "rc": true,
-                "pvalue": 1.01e-04,
-                "lflank": "TCCATCATCT",
-                "match": "GACGTAAAG",
-                "rflank": "GACCAGTGAA"
+                "pvalue": 5.68e-06,
+                "lflank": "ACCTCAATCC",
+                "match": "GAGGTAAAT",
+                "rflank": "ATAACACCAA"
+              }, {
+                "seq": 7,
+                "pos": 85,
+                "rc": false,
+                "pvalue": 5.68e-06,
+                "lflank": "ctccaaacat",
+                "match": "GAGGTAAAT",
+                "rflank": "ttttat"
               }, {
                 "seq": 8,
-                "pos": 19,
-                "rc": false,
-                "pvalue": 2.22e-04,
-                "lflank": "tgatgcaaat",
-                "match": "GGCGTCAAT",
-                "rflank": "gcaaggtcgt"
-              }, {
-                "seq": 3,
-                "pos": 89,
+                "pos": 71,
                 "rc": true,
-                "pvalue": 2.34e-04,
-                "lflank": "TGTAACGCTG",
-                "match": "GAGGTCACC",
-                "rflank": "ATGAAATGAT"
+                "pvalue": 9.62e-06,
+                "lflank": "CGTTATCGTT",
+                "match": "GAGGTCAAT",
+                "rflank": "AGCATTGGAA"
+              }, {
+                "seq": 2,
+                "pos": 4,
+                "rc": false,
+                "pvalue": 9.62e-06,
+                "lflank": "tgat",
+                "match": "GAGGTCAAT",
+                "rflank": "ccaggcgcat"
+              }, {
+                "seq": 0,
+                "pos": 7,
+                "rc": false,
+                "pvalue": 1.36e-05,
+                "lflank": "gctgttg",
+                "match": "GAGGTAGAT",
+                "rflank": "ctccttgcag"
               }, {
                 "seq": 14,
-                "pos": 136,
+                "pos": 46,
+                "rc": false,
+                "pvalue": 2.03e-05,
+                "lflank": "tccgtagcta",
+                "match": "GAGGTACAT",
+                "rflank": "aggtacatat"
+              }, {
+                "seq": 11,
+                "pos": 32,
                 "rc": true,
-                "pvalue": 3.34e-04,
-                "lflank": "CGAGTCAGGG",
-                "match": "AAGGTACAG",
-                "rflank": "TGCATGCGTG"
+                "pvalue": 2.42e-05,
+                "lflank": "GTGGAGATTG",
+                "match": "GAGGTAAAC",
+                "rflank": "AGACAACGAA"
+              }, {
+                "seq": 12,
+                "pos": 67,
+                "rc": true,
+                "pvalue": 3.38e-05,
+                "lflank": "TTCGTTTGAT",
+                "match": "GAGGTTAAT",
+                "rflank": "AGGATTTTCT"
+              }, {
+                "seq": 6,
+                "pos": 6,
+                "rc": false,
+                "pvalue": 4.21e-05,
+                "lflank": "tagatc",
+                "match": "GAGGTCACT",
+                "rflank": "aggctgtgcc"
+              }, {
+                "seq": 1,
+                "pos": 86,
+                "rc": false,
+                "pvalue": 6.23e-05,
+                "lflank": "agctgtgagt",
+                "match": "GACGTAAAT",
+                "rflank": "caagc"
+              }, {
+                "seq": 4,
+                "pos": 73,
+                "rc": false,
+                "pvalue": 7.05e-05,
+                "lflank": "tataagctcg",
+                "match": "GGGGTCAAT",
+                "rflank": "tctcaaatta"
+              }, {
+                "seq": 15,
+                "pos": 3,
+                "rc": true,
+                "pvalue": 1.47e-04,
+                "lflank": "TTGGAACCTC",
+                "match": "GAGGTCACC",
+                "rflank": "AGG"
+              }, {
+                "seq": 3,
+                "pos": 41,
+                "rc": false,
+                "pvalue": 1.51e-04,
+                "lflank": "gccatgactt",
+                "match": "GAGGTCGAG",
+                "rflank": "agatctgcaa"
+              }, {
+                "seq": 19,
+                "pos": 77,
+                "rc": false,
+                "pvalue": 1.71e-04,
+                "lflank": "accggaataa",
+                "match": "GAGGGACAT",
+                "rflank": "tagtcttatg"
+              }, {
+                "seq": 18,
+                "pos": 4,
+                "rc": true,
+                "pvalue": 2.10e-04,
+                "lflank": "GGATATTCCG",
+                "match": "GAAGTAGAT",
+                "rflank": "GCTA"
+              }, {
+                "seq": 5,
+                "pos": 21,
+                "rc": true,
+                "pvalue": 3.16e-04,
+                "lflank": "AATAGTATCT",
+                "match": "GAGATTAAT",
+                "rflank": "ATGAGTCACC"
               }
             ]
           }
         ],
         "scan": [
           {
-            "pvalue": 1.42e-03,
+            "pvalue": 2.49e-03,
             "sites": [
               {
                 "motif": 0,
-                "pos": 1,
-                "rc": true,
-                "pvalue": 3.54e-06
-              }
-            ]
-          }, {
-            "pvalue": 1.20e-02,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 69,
+                "pos": 7,
                 "rc": false,
-                "pvalue": 3.01e-05
+                "pvalue": 1.36e-05
               }
             ]
           }, {
-            "pvalue": 3.37e-02,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 128,
-                "rc": true,
-                "pvalue": 8.57e-05
-              }
-            ]
-          }, {
-            "pvalue": 8.95e-02,
-            "sites": []
-          }, {
-            "pvalue": 2.90e-03,
+            "pvalue": 1.14e-02,
             "sites": [
               {
                 "motif": 0,
                 "pos": 86,
-                "rc": true,
-                "pvalue": 7.26e-06
-              }
-            ]
-          }, {
-            "pvalue": 7.33e-03,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 127,
-                "rc": true,
-                "pvalue": 1.84e-05
-              }
-            ]
-          }, {
-            "pvalue": 7.33e-03,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 89,
                 "rc": false,
-                "pvalue": 1.84e-05
+                "pvalue": 6.23e-05
               }
             ]
           }, {
-            "pvalue": 2.54e-02,
+            "pvalue": 1.77e-03,
             "sites": [
               {
                 "motif": 0,
-                "pos": 65,
-                "rc": true,
-                "pvalue": 6.43e-05
+                "pos": 4,
+                "rc": false,
+                "pvalue": 9.62e-06
               }
             ]
           }, {
-            "pvalue": 8.50e-02,
+            "pvalue": 2.75e-02,
             "sites": []
           }, {
-            "pvalue": 3.95e-02,
+            "pvalue": 1.29e-02,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 73,
+                "rc": false,
+                "pvalue": 7.05e-05
+              }
+            ]
+          }, {
+            "pvalue": 5.66e-02,
             "sites": []
           }, {
-            "pvalue": 7.33e-03,
+            "pvalue": 7.71e-03,
             "sites": [
               {
                 "motif": 0,
-                "pos": 108,
-                "rc": true,
-                "pvalue": 3.36e-05
-              }, {
-                "motif": 0,
-                "pos": 137,
-                "rc": true,
-                "pvalue": 1.84e-05
-              }
-            ]
-          }, {
-            "pvalue": 1.78e-02,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 77,
-                "rc": true,
-                "pvalue": 4.50e-05
-              }
-            ]
-          }, {
-            "pvalue": 1.20e-02,
-            "sites": [
-              {
-                "motif": 0,
-                "pos": 109,
+                "pos": 6,
                 "rc": false,
-                "pvalue": 3.01e-05
+                "pvalue": 4.21e-05
               }
             ]
           }, {
-            "pvalue": 7.33e-03,
+            "pvalue": 1.04e-03,
             "sites": [
               {
                 "motif": 0,
-                "pos": 91,
-                "rc": true,
-                "pvalue": 1.84e-05
+                "pos": 85,
+                "rc": false,
+                "pvalue": 5.68e-06
               }
             ]
           }, {
-            "pvalue": 1.25e-01,
+            "pvalue": 1.77e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 71,
+                "rc": true,
+                "pvalue": 9.62e-06
+              }
+            ]
+          }, {
+            "pvalue": 1.04e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 12,
+                "rc": true,
+                "pvalue": 5.68e-06
+              }
+            ]
+          }, {
+            "pvalue": 1.04e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 40,
+                "rc": true,
+                "pvalue": 5.68e-06
+              }
+            ]
+          }, {
+            "pvalue": 4.44e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 32,
+                "rc": true,
+                "pvalue": 2.42e-05
+              }
+            ]
+          }, {
+            "pvalue": 6.20e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 67,
+                "rc": true,
+                "pvalue": 3.38e-05
+              }
+            ]
+          }, {
+            "pvalue": 1.04e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 55,
+                "rc": true,
+                "pvalue": 5.68e-06
+              }
+            ]
+          }, {
+            "pvalue": 3.72e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 46,
+                "rc": false,
+                "pvalue": 2.03e-05
+              }
+            ]
+          }, {
+            "pvalue": 2.66e-02,
+            "sites": []
+          }, {
+            "pvalue": 1.04e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 37,
+                "rc": false,
+                "pvalue": 5.68e-06
+              }
+            ]
+          }, {
+            "pvalue": 1.04e-03,
+            "sites": [
+              {
+                "motif": 0,
+                "pos": 38,
+                "rc": false,
+                "pvalue": 5.68e-06
+              }
+            ]
+          }, {
+            "pvalue": 3.79e-02,
+            "sites": []
+          }, {
+            "pvalue": 3.10e-02,
             "sites": []
           }
         ]

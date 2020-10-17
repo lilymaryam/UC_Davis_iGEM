@@ -1,0 +1,269 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.1.1 (Release date: Wed Jan 29 15:00:42 2020 -0800)
+
+For further information on how to interpret please access http://meme-suite.org.
+To get a copy of the MEME software please access http://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to discover
+motifs in biopolymers", Proceedings of the Second International
+Conference on Intelligent Systems for Molecular Biology, pp. 28-36,
+AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= /tmp/testmotif79509_100_20_1.fa
+CONTROL SEQUENCES= --none--
+ALPHABET= ACGT
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+seq-0                    1.0000    100  seq-1                    1.0000    100  
+seq-2                    1.0000    100  seq-3                    1.0000    100  
+seq-4                    1.0000    100  seq-5                    1.0000    100  
+seq-6                    1.0000    100  seq-7                    1.0000    100  
+seq-8                    1.0000    100  seq-9                    1.0000    100  
+seq-10                   1.0000    100  seq-11                   1.0000    100  
+seq-12                   1.0000    100  seq-13                   1.0000    100  
+seq-14                   1.0000    100  seq-15                   1.0000    100  
+seq-16                   1.0000    100  seq-17                   1.0000    100  
+seq-18                   1.0000    100  seq-19                   1.0000    100  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme /tmp/testmotif79509_100_20_1.fa -dna -markov_order 0 -mod zoops -nmotifs 1 -revcomp 
+
+model:  mod=         zoops    nmotifs=         1    evt=           inf
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+strands: + -
+width:  minw=            8    maxw=           50
+nsites: minsites=        2    maxsites=       20    wnsites=       0.8
+theta:  spmap=         uni    spfuzz=        0.5
+em:     prior=   dirichlet    b=            0.01    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=            2000    N=              20
+sample: seed=            0    hsfrac=          0
+        searchsize=   2000    norand=         no    csites=       1000
+Letter frequencies in dataset:
+A 0.295 C 0.205 G 0.205 T 0.295 
+Background letter frequencies (from file dataset with add-one prior applied):
+A 0.295 C 0.205 G 0.205 T 0.295 
+Background model order: 0
+********************************************************************************
+
+
+********************************************************************************
+MOTIF GAGGTMAAT MEME-1	width =   9  sites =  20  llr = 178  E-value = 1.3e-015
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 Description
+--------------------------------------------------------------------------------
+Simplified        A  :a11:689:
+pos.-specific     C  ::1::3111
+probability       G  a19a1:2:1
+matrix            T  ::::a1::9
+
+         bits    2.3 *        
+                 2.1 *  *     
+                 1.8 *  *     
+                 1.6 *****    
+Relative         1.4 *****  * 
+Entropy          1.1 *****  **
+(12.9 bits)      0.9 ***** ***
+                 0.7 *********
+                 0.5 *********
+                 0.2 *********
+                 0.0 ---------
+
+Multilevel           GAGGTAAAT
+consensus                 C   
+sequence                      
+                              
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name            Strand  Start   P-value              Site 
+-------------            ------  ----- ---------            ---------
+seq-17                       +     39  5.68e-06 gtttaacgat GAGGTAAAT gggcatcatg
+seq-16                       +     38  5.68e-06 ctagactgct GAGGTAAAT gggtgactaa
+seq-13                       -     56  5.68e-06 ATTGTGACCC GAGGTAAAT GCGGATACGT
+seq-10                       -     41  5.68e-06 TGAACGCTTT GAGGTAAAT GATTGTGTGT
+seq-9                        -     13  5.68e-06 ACCTCAATCC GAGGTAAAT ATAACACCAA
+seq-7                        +     86  5.68e-06 ctccaaacat GAGGTAAAT ttttat    
+seq-8                        -     72  9.62e-06 CGTTATCGTT GAGGTCAAT AGCATTGGAA
+seq-2                        +      5  9.62e-06       tgat GAGGTCAAT ccaggcgcat
+seq-0                        +      8  1.36e-05    gctgttg GAGGTAGAT ctccttgcag
+seq-14                       +     47  2.03e-05 tccgtagcta GAGGTACAT aggtacatat
+seq-11                       -     33  2.42e-05 GTGGAGATTG GAGGTAAAC AGACAACGAA
+seq-12                       -     68  3.38e-05 TTCGTTTGAT GAGGTTAAT AGGATTTTCT
+seq-6                        +      7  4.21e-05     tagatc GAGGTCACT aggctgtgcc
+seq-1                        +     87  6.23e-05 agctgtgagt GACGTAAAT caagc     
+seq-4                        +     74  7.05e-05 tataagctcg GGGGTCAAT tctcaaatta
+seq-15                       -      4  1.47e-04 TTGGAACCTC GAGGTCACC AGG       
+seq-3                        +     42  1.51e-04 gccatgactt GAGGTCGAG agatctgcaa
+seq-19                       +     78  1.71e-04 accggaataa GAGGGACAT tagtcttatg
+seq-18                       -      5  2.10e-04 GGATATTCCG GAAGTAGAT GCTA      
+seq-5                        -     22  3.16e-04 AATAGTATCT GAGATTAAT ATGAGTCACC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+seq-17                            5.7e-06  38_[+1]_53
+seq-16                            5.7e-06  37_[+1]_54
+seq-13                            5.7e-06  55_[-1]_36
+seq-10                            5.7e-06  40_[-1]_51
+seq-9                             5.7e-06  12_[-1]_79
+seq-7                             5.7e-06  85_[+1]_6
+seq-8                             9.6e-06  71_[-1]_20
+seq-2                             9.6e-06  4_[+1]_87
+seq-0                             1.4e-05  7_[+1]_84
+seq-14                              2e-05  46_[+1]_45
+seq-11                            2.4e-05  32_[-1]_59
+seq-12                            3.4e-05  67_[-1]_24
+seq-6                             4.2e-05  6_[+1]_85
+seq-1                             6.2e-05  86_[+1]_5
+seq-4                             7.1e-05  73_[+1]_18
+seq-15                            0.00015  3_[-1]_88
+seq-3                             0.00015  41_[+1]_50
+seq-19                            0.00017  77_[+1]_14
+seq-18                            0.00021  4_[-1]_87
+seq-5                             0.00032  21_[-1]_70
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF GAGGTMAAT width=9 seqs=20
+seq-17                   (   39) GAGGTAAAT  1 
+seq-16                   (   38) GAGGTAAAT  1 
+seq-13                   (   56) GAGGTAAAT  1 
+seq-10                   (   41) GAGGTAAAT  1 
+seq-9                    (   13) GAGGTAAAT  1 
+seq-7                    (   86) GAGGTAAAT  1 
+seq-8                    (   72) GAGGTCAAT  1 
+seq-2                    (    5) GAGGTCAAT  1 
+seq-0                    (    8) GAGGTAGAT  1 
+seq-14                   (   47) GAGGTACAT  1 
+seq-11                   (   33) GAGGTAAAC  1 
+seq-12                   (   68) GAGGTTAAT  1 
+seq-6                    (    7) GAGGTCACT  1 
+seq-1                    (   87) GACGTAAAT  1 
+seq-4                    (   74) GGGGTCAAT  1 
+seq-15                   (    4) GAGGTCACC  1 
+seq-3                    (   42) GAGGTCGAG  1 
+seq-19                   (   78) GAGGGACAT  1 
+seq-18                   (    5) GAAGTAGAT  1 
+seq-5                    (   22) GAGATTAAT  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 9 n= 1840 bayes= 7.99184 E= 1.3e-015 
+ -1097  -1097    228  -1097 
+   169  -1097   -204  -1097 
+  -256   -204    213  -1097 
+  -256  -1097    221  -1097 
+ -1097  -1097   -204    169 
+   103     55  -1097   -156 
+   135   -104    -45  -1097 
+   161   -104  -1097  -1097 
+ -1097   -104   -204    153 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 9 nsites= 20 E= 1.3e-015 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.950000  0.000000  0.050000  0.000000 
+ 0.050000  0.050000  0.900000  0.000000 
+ 0.050000  0.000000  0.950000  0.000000 
+ 0.000000  0.000000  0.050000  0.950000 
+ 0.600000  0.300000  0.000000  0.100000 
+ 0.750000  0.100000  0.150000  0.000000 
+ 0.900000  0.100000  0.000000  0.000000 
+ 0.000000  0.100000  0.050000  0.850000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GAGGTMAAT MEME-1 regular expression
+--------------------------------------------------------------------------------
+GAGGT[AC]AAT
+--------------------------------------------------------------------------------
+
+
+
+
+Time  0.38 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+SUMMARY OF MOTIFS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+	Combined block diagrams: non-overlapping sites with p-value < 0.0001
+--------------------------------------------------------------------------------
+SEQUENCE NAME            COMBINED P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+seq-0                            2.49e-03  7_[+1(1.36e-05)]_84
+seq-1                            1.14e-02  86_[+1(6.23e-05)]_5
+seq-2                            1.77e-03  4_[+1(9.62e-06)]_87
+seq-3                            2.75e-02  100
+seq-4                            1.29e-02  73_[+1(7.05e-05)]_18
+seq-5                            5.66e-02  100
+seq-6                            7.71e-03  6_[+1(4.21e-05)]_85
+seq-7                            1.04e-03  85_[+1(5.68e-06)]_6
+seq-8                            1.77e-03  71_[-1(9.62e-06)]_20
+seq-9                            1.04e-03  12_[-1(5.68e-06)]_79
+seq-10                           1.04e-03  40_[-1(5.68e-06)]_51
+seq-11                           4.44e-03  32_[-1(2.42e-05)]_59
+seq-12                           6.20e-03  67_[-1(3.38e-05)]_24
+seq-13                           1.04e-03  55_[-1(5.68e-06)]_36
+seq-14                           3.72e-03  46_[+1(2.03e-05)]_45
+seq-15                           2.66e-02  100
+seq-16                           1.04e-03  37_[+1(5.68e-06)]_54
+seq-17                           1.04e-03  38_[+1(5.68e-06)]_53
+seq-18                           3.79e-02  100
+seq-19                           3.10e-02  100
+--------------------------------------------------------------------------------
+
+********************************************************************************
+
+
+********************************************************************************
+Stopped because requested number of motifs (1) found.
+********************************************************************************
+
+CPU: Lilys-MacBook-Pro.local
+
+********************************************************************************

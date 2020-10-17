@@ -5,6 +5,7 @@ import random
 import motiflib
 import math
 import os
+import make_backgroundseq
 
 extended_help = """
 %(prog)s is a program that simulates promoter regions by embedding binding sites
@@ -17,6 +18,10 @@ parser = argparse.ArgumentParser(
 	epilog=extended_help)
 parser.add_argument('--jasparfile', required=True, type=str,
 	metavar='<str>', help='directory path to jaspar file')
+parser.add_argument('--dnafile', required=False, type=str,
+	metavar='<str>', help='fasta file of promoters')
+parser.add_argument('--markov_order', required=False, type=int, default=0,
+	metavar='<int>', help='markov order of generated sequence [%(default)i]')
 parser.add_argument('--numseq', required=False, type=int, default=10,
 	metavar='<int>', help='number of sequences to generate [%(default)i]')
 parser.add_argument('--seqlen', required=False, type=int, default=100,
@@ -36,14 +41,14 @@ parser.add_argument('--PT', required=False, type=float, default=0.25,
 parser.add_argument('--bothstrands', action='store_true',
 	help='on/off switch')
 parser.add_argument('--negstrands', action='store_true',
-	help='on/off switch')
-
-	
+	help='on/off switch')	
 arg = parser.parse_args()
 
+#if not arg.dnafile:
+#	assert(arg.markov_order==0)
 	
-
-
+print(arg.markov_order)
+	
 assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
 assert(arg.freq <= 1.0)
 if arg.bothstrands and arg.negstrands:
@@ -60,10 +65,30 @@ def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	return seq
 
 
+def generate_markovseq(numseq,seqlen,data_file,k):
+	dna = make_backgroundseq.organize_dna(arg.dnafile)
+	kmers = make_backgroundseq.make_kmerdict(arg.markov_order,dna)
+	pool = make_backgroundseq.make_contextpool(kmers)
+	seq = make_backgroundseq.generate_seq(arg.markov_order,pool,arg.seqlen)
+	seq = seq.lower()
+	list_seq = []
+	for i in range(len(seq)):
+		list_seq.append(seq[i])
+	return list_seq
+	
+
+
 motif = motiflib.read_JASPAR(arg.jasparfile)
 assert(len(motif) <= arg.seqlen)
 for i in range(0, arg.numseq):
-	seq = (generate_seq(arg.numseq, arg.seqlen, arg.PA, arg.PC, arg.PG, arg.PT))
+	if not arg.dnafile:
+		seq = (generate_seq(arg.numseq, arg.seqlen, arg.PA, arg.PC, arg.PG,\
+		arg.PT))
+		#print(arg.PA, arg.PC, arg.PG,arg.PT)
+	else:
+		seq = (generate_markovseq(arg.numseq,arg.seqlen,arg.dnafile,\
+		arg.markov_order))
+		#print(arg.markov_order)
 	r = random.random()
 	places = []
 	if r < arg.freq:
