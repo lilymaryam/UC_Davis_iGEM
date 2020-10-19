@@ -1,20 +1,56 @@
 import random
 import sys
 import argparse
+#import motif
 
 parser = argparse.ArgumentParser(
 	description='Downsample from an existing promoter file')
-
-parser.add_argument('--size', required=True, type=int, default = 1,
-                    metavar='<int>', help='Sample Size [%(default)i]')
-
 parser.add_argument('--fasta', required=True, type=str,
 	metavar='<str>', help='fasta file of promoters')
-
-parser.add_argument('--iterate', required=False, type=int,
-                    metavar='<int>', help='Iterates by this number from --size -> original fasta size')
-
+parser.add_argument('--step', required=False, type=int, default=2,
+	metavar='<int>', help='step down value [%(default)i]')
+parser.add_argument('--floor', required=False, type=int, default=2,
+	metavar='<int>', help='step down value [%(default)i]')
+parser.add_argument('--samples', required=False, type=int, default=3,
+    metavar='<int>', help='number of times at each step [%(default)i]')
 arg = parser.parse_args()
+
+## Part 1: run meme with whole dataset
+# pwm1 = motif.run_meme(...)
+
+## Part 2: run meme with downsampled datasets, compare to whole run
+seqs = []
+with open(arg.fasta) as fp:
+	defline = None
+	for line in fp.readlines():
+		if line.startswith('>'): defline = line
+		else: seqs.append((defline, line))
+
+subtract = 0
+while True:
+	subtract += arg.step
+	size = len(seqs) - subtract
+	if size < arg.floor: break
+	#print(f'data set size = {size}')
+	for i in range(arg.samples):
+		#print(f'set {i}')
+		set = random.sample(seqs, size)
+		
+		# write temp file
+		with open(f'downsampler.temp.{size}.{i}.fasta', 'w') as fp:
+			for s in set:
+				fp.write(s[0])
+				fp.write(s[1])
+		
+		# run meme
+		# pwm2 = motif.run_meme(...)
+		
+		# compare meme output to the whole set
+		#if motif.distance(pwm1, pwm2) < threshold:...
+	
+
+
+"""
 promnumb = 0
 outseq = ''
 match = 0
@@ -64,4 +100,4 @@ with open(arg.fasta, 'rt') as fast:
             if match == 1:
                 outseq += line.strip(header) + '\n'
         print(outseq)
-
+"""
