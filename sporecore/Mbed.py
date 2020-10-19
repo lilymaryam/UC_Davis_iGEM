@@ -5,7 +5,7 @@ import random
 import motiflib
 import math
 import os
-import make_backgroundseq
+#import make_backgroundseq
 
 extended_help = """
 %(prog)s is a program that simulates promoter regions by embedding binding sites
@@ -44,15 +44,66 @@ parser.add_argument('--negstrands', action='store_true',
 	help='on/off switch')	
 arg = parser.parse_args()
 
-#if not arg.dnafile:
-#	assert(arg.markov_order==0)
+if not arg.dnafile:
+	assert(arg.markov_order==0)
 	
-print(arg.markov_order)
+#print(arg.markov_order)
 	
 assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
 assert(arg.freq <= 1.0)
 if arg.bothstrands and arg.negstrands:
 	raise ValueError('Strandedness cannot be both and negative together')
+	
+def organize_dna(dnafile):
+	'''Extracts DNA sequence from fasta format and returns an extended string of DNA for markov analysis  '''
+	dna = ''
+	with open(dnafile) as df:
+		for line in df.readlines():
+			line = line.strip()
+			if not line.startswith('>'):
+				dna += line
+	return dna
+
+
+def make_kmerdict(k, dna):
+	'''Takes DNA sequence, finds each window of k size and records the window\
+	 and its next nucleotide in a dictionary '''
+	kmers = {}
+	for i in range(len(dna)-k):
+		ctx = dna[i:i+k]
+		nt = dna[i+k]
+		if ctx not in kmers:
+			kmers[ctx] = {}
+		if nt not in kmers[ctx]:
+			kmers[ctx][nt] = 0 
+		kmers[ctx][nt] += 1
+	#print(kmers)
+	if len(kmers) < 4**k:
+		raise ValueError('Not enough DNA sequence for markov order')
+	else:
+		return kmers
+
+
+
+def make_contextpool(kmers):
+	'''Finds all duplicate kmers in the markov dictionary and counts the
+	nucleotides   '''
+	pool = {}
+	for ctx in kmers:
+		pool[ctx] = '' 
+		for nt in kmers[ctx]:
+			pool[ctx] = pool[ctx] + kmers[ctx][nt]*nt
+	return pool
+
+def make_markovseq(k, pool,seqsize):
+	seq = ''
+	for i in range(k):
+		seq += random.choice('ACGT')
+	for i in range(k,seqsize):
+		prev = seq[i-k:i]
+		if prev in pool:
+			seq += random.choice(pool[prev])
+	return seq
 
 def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 	seq = []
@@ -66,10 +117,10 @@ def generate_seq(numseq, seqlen, PA, PC, PG, PT):
 
 
 def generate_markovseq(numseq,seqlen,data_file,k):
-	dna = make_backgroundseq.organize_dna(arg.dnafile)
-	kmers = make_backgroundseq.make_kmerdict(arg.markov_order,dna)
-	pool = make_backgroundseq.make_contextpool(kmers)
-	seq = make_backgroundseq.generate_seq(arg.markov_order,pool,arg.seqlen)
+	dna = organize_dna(arg.dnafile)
+	kmers = make_kmerdict(arg.markov_order,dna)
+	pool = make_contextpool(kmers)
+	seq = make_markovseq(arg.markov_order,pool,arg.seqlen)
 	seq = seq.lower()
 	list_seq = []
 	for i in range(len(seq)):

@@ -64,12 +64,42 @@ assert(math.isclose(arg.PA + arg.PC + arg.PG + arg.PT, 1.0))
 assert(arg.motiffrequency <= 1.0)
 assert(arg.minpromoterlength <= arg.maxpromoterlength)
 
-'''
-if arg.dnafile:
-	print('YEEEEEEEHHAAAWWWW')
-else: 
-	print('NAHHHHHHHHHHHHHHH')
-'''
+def convert_argtovar(minprom, maxprom, promstep, minseq,maxseq,seqstep):
+	'''Accepts command line parameter arguments and converts them to ranges of
+	parameters to be tested in MEME'''
+	promoter = []
+	num_seq = []
+	for i in range(minprom,maxprom+1,promstep):
+		if i != 0:
+			promoter.append(i)
+	for i in range(minseq,maxseq+1,seqstep):
+		if i != 0:
+			num_seq.append(i)
+	return promoter, num_seq
+	
+
+def generate_promoter_mo(dnafile, jasparfile, p, n, o, freq,i): 
+	'''Creates a fasta file of promoter sequences with embedded binding motifs.
+	Background sequence is generated using markov models of DNA sequence from a
+	fasta file input'''
+	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}_{i}.fa' 
+	cmd = f'python3 mbed.py --jasparfile {jasparfile} \
+	--dnafile {dnafile} --markov_order {o} --numseq {n} --seqlen {p} --freq \
+	{freq} --bothstrands > {tmpfile} '
+	os.system(cmd)
+	return tmpfile
+
+def generate_promoter_bg(jasparfile, p, n, freq, background,i):
+	'''Creates a fasta file of promoter sequences with embedded binding motifs.
+	Background sequence is generated using a nucleotide distribution frequency
+	input from the command line.'''
+	tmpfile = f'/tmp/testmotif{os.getpid()}_{p}_{n}_{i}.fa' 
+	cmd = f'python3 mbed.py --jasparfile {jasparfile} \
+	--numseq {n} --seqlen {p} --freq {freq} --PA {background["A"]} --PC \
+	{background["C"]} --PG {background["G"]} --PT {background["T"]} \
+	--bothstrands > {tmpfile} '
+	os.system(cmd)
+	return tmpfile
 
 
 if not arg.dnafile:
@@ -84,7 +114,7 @@ model = ['zoops','oops','anr']
 freq = arg.motiffrequency
 iterations = arg.numiterations
 
-promoter,numseq = motiflib.convert_argtovar(arg.minpromoterlength,\
+promoter,numseq = convert_argtovar(arg.minpromoterlength,\
 arg.maxpromoterlength,arg.promoterlengthstep,arg.minnumseq,arg.maxnumseq,\
 arg.numseqstep)
 o = arg.markov_order
@@ -114,13 +144,13 @@ for p in promoter:
 			for r in range(iterations):
 				if arg.dnafile:
 					#print('YEEEEEEEHHAAAWWWW')
-					promoter_file = motiflib.generate_promoter_mo(arg.dnafile, \
+					promoter_file = generate_promoter_mo(arg.dnafile, \
 					arg.jasparfile, p, n, o, freq,r+1)
 					background = motiflib.calcbg_frompromfile(promoter_file)
 					#print('mo background', background)
 				else:
 					#print('NAHHHHHHHHHHHHHHH')
-					promoter_file = motiflib.generate_promoter_bg\
+					promoter_file = generate_promoter_bg\
 					(arg.jasparfile,p,n,freq,background,r+1)
 				#print('background',background,'markov_order',arg.markov_order)
 				j_info, numjsites = motiflib.read_testmotif(promoter_file)

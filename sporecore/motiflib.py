@@ -432,17 +432,12 @@ def calcbg_frompromfile(promoterfile):
 		else:
 			raise ValueError('Promoter file empty, check file parameters')	
 	
-def run_meme(memepath,promoterfile,m,o,nummotifs,bothstrands):
+def run_meme(memepath,promoterfile,m,o,nummotifs):
 	'''Will compile selected meme parameters into a command to run downloaded
 	MEME software, and then will extract important information from meme output
 	file. '''
 	meme = f'{memepath} {promoterfile} -dna -markov_order {o} -mod {m}\
 	-nmotifs {nummotifs} -revcomp'
-	#if bothstrands:
-	#	meme=meme+' -revcomp'
-	#add palindrome and other options 
-	#if arg.condenseddata:
-	#	for i in range()
 	os.system(meme)
 	meme_info = read_memetxt('meme_out/meme.txt')
 	motifs, motif_info = memepwm('meme_out/meme.txt')

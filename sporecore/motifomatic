@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+import sporecore.motif as sm
+import argparse 
+
+parser = argparse.ArgumentParser(
+	description='Brief description of program.')
+# required arguments
+parser.add_argument('--fastafile', required=True, type=str,
+	metavar='<str>', help='Fasta promoter file')
+parser.add_argument('--memepath', required=False, type=str, default='meme',
+	metavar='<str>', help='path to motif finder[%(default)s]')
+parser.add_argument('--mememodel', required=False, type=str, default='zoops',
+	metavar='<str>', help='model used by motif-finder[%(default)s]')
+parser.add_argument('--markov_order', required=False, type=int, default=0,
+	metavar='<int>', help='markov model used by motif-finder[%(default)s]')
+parser.add_argument('--nummotifs', required=False, type=int, default=1,
+	metavar='<int>', help='numbers of motifs found by motif-finder[%(default)s]')
+#parser.add_argument('--rfloat', required=True, type=float,#
+#	metavar='<float>', help='required floating point argument')
+# optional arguments with default parameters
+parser.add_argument('--jasparfile', required=False, type=str,
+	metavar='<str>', help='Expected PWM for verification clusters[%(default)s]')
+#parser.add_argument('--dint', required=False, type=int, default=1,
+#	metavar='<int>', help='optional integer argument [%(default)i]')
+#parser.add_argument('--dfloat', required=False, type=float, default=3.14,
+#	metavar='<float>', help='optional floating point argument [%(default)f]')
+# switches
+parser.add_argument('--show_sites', action='store_true',
+	help='on/off switch')
+# finalization
+arg = parser.parse_args()
+
+m = arg.mememodel
+o = arg.markov_order
+
+def present_pwm(pwm):
+	A = []
+	C = []
+	G = []
+	T = []
+	for posi in pwm:
+		A.append(posi['A'])
+		C.append(posi['C'])
+		G.append(posi['G'])
+		T.append(posi['T']) 
+	return A, C, G, T
+
+
+
+motifs, meme_info, motif_info = sm.run_meme(arg.memepath,arg.fastafile,m,o,arg.nummotifs)
+
+if arg.jasparfile:
+	exp_mot = sm.read_JASPAR(arg.jasparfile)
+	bg = sm.calcbg_frompromfile(arg.fastafile)
+	perf = sm.performance_bg(exp_mot,motifs,bg)
+	assert(len(motifs)==len(perf))
+	
+	
+assert(len(motifs)==len(motif_info))
+for i in range(len(motifs)):
+	print('NAME:',motif_info[i][0],'WIDTH:',motif_info[i][1],'NUMBER OF SITES:', motif_info[i][2]\
+	, 'E VALUE:', motif_info[i][3], 'INFO IN BITS:', motif_info[i][4], 'BIT PERCENTAGE:', motif_info[i][5])
+	pwm = motifs[i]
+	if arg.jasparfile:
+		print('similarity score:', *perf[i])
+	A,C,G,T = present_pwm(pwm)
+	print('A',A)
+	print('C',C)
+	print('G',G)
+	print('T',T)
+	if arg.show_sites:
+		for j in range(motif_info[i][2]):
+			print(meme_info[j])
+			
+	print('')
+#print(motifs)
+#print(meme_info)
+#print(motif_info)
+
+
+
