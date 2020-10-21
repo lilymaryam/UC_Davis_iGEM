@@ -1,0 +1,4 @@
+1501 -------tct ctatcactga tagggagtgg taaactcgac tttcactttt ctctatcact
+1561 gatagggagt ggtaaactcg actttcactt ttctctatca ctgataggga gtggtaaact
+1621 cgactttcac ttttctctat cactgatagg gagtggtaaa ctcgactttc acttttctct
+1681 atcactgata ggga------
